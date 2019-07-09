@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 
 export default class Login extends Component {
     state = {
-        username: '',
-        channels: []
+        username: ''
     }
 
     constructor() {
@@ -38,6 +37,10 @@ export default class Login extends Component {
             .then(json => {
                 console.log('login:', json)
                 if (json && json.jwt) {
+                    // let base64Url = json.jwt.split('.')[1];
+                    // let base64 = base64Url.replace('-', '+').replace('_', '/');
+                    // let userInfo =  JSON.parse(atob(base64));
+                    // console.log(userInfo)
                     this.saveToken(json.jwt)
                     this.getProfile()
                     this.getChannels()
@@ -65,24 +68,12 @@ export default class Login extends Component {
             })
     }
 
-    getChannels = () => {
-        let token = this.getToken()
-        fetch('http://localhost:3000/api/v1/channels', {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        })
-            .then(res => res.json())
-            .then(json => {
-                console.log('channels:', json)
-                this.setState(prevState => { 
-                    return {channels: prevState.channels.concat(json) }})
-            })
-    }
+  
 
 
     saveToken(jwt) {
         localStorage.setItem('jwt', jwt)
+       
     }
 
     clearToken(jwt) {
