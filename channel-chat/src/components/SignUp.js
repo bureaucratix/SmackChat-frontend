@@ -6,12 +6,12 @@ export default class SignUp extends Component {
 
     constructor() {
         super()
-        this.state = {
-            username: '',
-            name: '', 
-            password: '', 
-            email: ''
-        }
+        // this.state = {
+        //     username: '',
+        //     name: '', 
+        //     password: '', 
+        //     email: ''
+        // }
     }
 
     handleSubmit = (event) => {
