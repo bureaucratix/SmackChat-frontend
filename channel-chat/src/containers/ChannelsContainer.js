@@ -65,6 +65,7 @@ export default class ChannelsContainer extends Component {
                     <div className="ui vertical fluid tabular menu">
                     
                         <h1>Channels</h1>
+                        <UserPopUp />
                         <div className="ui divider"></div>
                         {
                             this.state.channels.map(chan => {
@@ -78,6 +79,7 @@ export default class ChannelsContainer extends Component {
                             this.state.activeChannel.messages.map(m => {
                                 return <Message message={m} />
                             }):null}
+                        
                     </div>
                 </div>
                 
