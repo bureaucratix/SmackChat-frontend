@@ -1,19 +1,15 @@
 
-import React, { Component } from 'react';
+import React, {Component} from 'react'
+import Message from './Message'
 
-class Channel extends Component {
-    constructor() {
-        super();
-        this.state = {
-        };
-    }
+export default class Channel extends Component {
 
     render() {
-        return (
-            <div> I'm a Channel. Hello! </div>
-        )
+        <div className="ui segment">
+            {this.props.messages.map(message => {
+                <Message user={this.props.user}/>
+            })}
+        </div>
     }
 }
-
-export default Channel;
 

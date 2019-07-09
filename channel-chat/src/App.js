@@ -1,11 +1,14 @@
 import React from 'react';
+import Login from './containers/Login';
 import './App.css';
-import ChannelContainer from  "./containers/ChannelContainer"
+import SignUp from './components/SignUp';
 
 function App() {
   return (
     <div className="app">
-    <ChannelContainer />
+      <SignUp/>
+      <Login />
+    
     </div>
   );
 }
