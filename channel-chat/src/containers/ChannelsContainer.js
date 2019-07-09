@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ChannelListItem from '../components/ChannelListItem'
+import UserPopUp from '../components/UserPopUp'
 
 export default class ChannelsContainer extends Component {
 
@@ -40,6 +41,10 @@ export default class ChannelsContainer extends Component {
         return localStorage.getItem('jwt')
     } 
 
+    
+        
+    
+
 
 
 
@@ -51,6 +56,7 @@ export default class ChannelsContainer extends Component {
             <div className="ui grid">
                 <div className="four wide column">
                     <div className="ui vertical fluid tabular menu">
+                    
                         <h1>Channels</h1>
                         <div className="ui divider"></div>
                         {
@@ -64,6 +70,7 @@ export default class ChannelsContainer extends Component {
                       
                     </div>
                 </div>
+                
             </div>
             </div>
         )
