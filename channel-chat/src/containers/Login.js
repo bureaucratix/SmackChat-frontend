@@ -13,6 +13,7 @@ export default class Login extends Component {
 
         if (this.getToken()) {
             this.getProfile()
+            this.getChannels()
         }
 
         this.logout = this.logout.bind(this)
@@ -38,6 +39,7 @@ export default class Login extends Component {
                 if (json && json.jwt) {
                     this.saveToken(json.jwt)
                     this.getProfile()
+                    this.getChannels()
                 }
             })
     }
@@ -61,6 +63,20 @@ export default class Login extends Component {
                 this.setState({ user: json.user })
             })
     }
+
+    getChannels = () => {
+        let token = this.getToken()
+        fetch('http://localhost:3000/api/v1/channels', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+            .then(json => {
+                console.log('channels:', json)
+            })
+    }
+
 
     saveToken(jwt) {
         localStorage.setItem('jwt', jwt)
@@ -90,8 +106,15 @@ export default class Login extends Component {
                     <pre>
                         {'{\n'}
                         username: {this.state.user.username + '\n'}
-                        avatar: {this.state.user.avatar + '\n'}
-                        bio: {this.state.user.bio + '\n'}
+                        name: {this.state.user.name + '\n'}
+                        email: {this.state.user.email + '\n'}
+                        {'}\n'}
+                    </pre>
+                    <pre>
+                        {'{\n'}
+                        username: {this.state.user.username + '\n'}
+                        name: {this.state.user.name + '\n'}
+                        email: {this.state.user.email + '\n'}
                         {'}\n'}
                     </pre>
                 </div>}
