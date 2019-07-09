@@ -13,7 +13,6 @@ export default class Login extends Component {
 
         if (this.getToken()) {
             this.getProfile()
-            this.getChannels()
         }
 
         this.logout = this.logout.bind(this)
@@ -43,7 +42,6 @@ export default class Login extends Component {
                     // console.log(userInfo)
                     this.saveToken(json.jwt)
                     this.getProfile()
-                    this.getChannels()
                 }
             })
     }
@@ -105,9 +103,7 @@ export default class Login extends Component {
                         {'}\n'}
                     </pre>
                     <pre>
-                        channels: {this.state.channels.map(chan => {
-                            return chan.name
-                        })}
+         
                     </pre>
                 </div>}
             </div>
