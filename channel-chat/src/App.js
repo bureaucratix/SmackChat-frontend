@@ -5,9 +5,10 @@ import SignUp from './components/SignUp';
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <SignUp/>
       <Login />
+    
     </div>
   );
 }
