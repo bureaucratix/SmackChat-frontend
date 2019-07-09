@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ChannelListItem from '../components/ChannelListItem'
+import Message from '../components/Message'
 
 export default class ChannelsContainer extends Component {
 
@@ -40,6 +41,13 @@ export default class ChannelsContainer extends Component {
         return localStorage.getItem('jwt')
     } 
 
+    changeChannel = (channel) => {
+        console.log(channel.messages)
+        this.setState({
+            activeChannel: channel
+        })
+    }
+
 
 
 
@@ -55,13 +63,16 @@ export default class ChannelsContainer extends Component {
                         <div className="ui divider"></div>
                         {
                             this.state.channels.map(chan => {
-                               return <a className="item"><ChannelListItem name={chan.name} /></a> 
+                               return <ChannelListItem key={chan.id} channelSelect={this.changeChannel} channel={chan}  />
                             })}
                     </div>
                 </div>
                 <div className="twelve wide stretched column">
                     <div className="ui segment">
-                      
+                            {this.state.activeChannel?
+                            this.state.activeChannel.messages.map(m => {
+                                return <Message message={m} />
+                            }):null}
                     </div>
                 </div>
             </div>

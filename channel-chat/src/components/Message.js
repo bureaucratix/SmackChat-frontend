@@ -4,8 +4,8 @@ const Message = (props) =>  {
 
     return (
         <div className="ui segment">
-            {props.user.username}
-            {props.message.content}
+            {props.message.user_id}
+            {props.message.content.toString()}
         </div>
     );
 }
