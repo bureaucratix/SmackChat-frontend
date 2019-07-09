@@ -1,7 +1,20 @@
 import React from 'react'
 
 const Message = (props) =>  {
-    let content = props.message.content
+
+    let content = ""
+    let user_name = ''
+    let created_at = ""
+    if(props.message.content == undefined) {
+         content = props.message.message.content
+        user_name = props.message.message.user_name
+        created_at = props.message.message.created_at
+    } else {
+         content = props.message.content
+        user_name = props.message.user_name
+        created_at = props.message.created_at
+    }
+
   
     return (
 
@@ -11,9 +24,9 @@ const Message = (props) =>  {
             </div>
             <div className="content">
                 <div className="summary">
-                    <a>{props.message.user_name}</a>
+                    <a>{user_name}</a>
                     <div className="date">
-                        {props.message.created_at}
+                        {created_at}
                     </div>
                     <div className="extra text">
                         {content}

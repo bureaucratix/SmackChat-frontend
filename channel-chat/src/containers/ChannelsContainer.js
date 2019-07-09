@@ -115,15 +115,13 @@ export default class ChannelsContainer extends Component {
                         </div>
                     </div>
                     <div className="twelve wide stretched column">
-                        <div className="ui segment">
-                            <div className = "scroll-feed">
+                        <div className="ui segment">  
                                 <div className="ui feed">
                                     {this.state.activeChannel?
                                     this.state.messages.map(m => {
                                     return <Message key={m.id} message={m} />
                                     }):null}
                                 </div>
-                            </div>
                             {
                                 this.state.activeChannel !== null ?
                                 <MessageField handleSubmit={this.postMessage} channel={this.state.activeChannel}/> :null
