@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 
 export default class Login extends Component {
     state = {
-        username: ''
+        username: '',
+        channels: []
     }
 
     constructor() {
@@ -74,6 +75,8 @@ export default class Login extends Component {
             .then(res => res.json())
             .then(json => {
                 console.log('channels:', json)
+                this.setState(prevState => { 
+                    return {channels: prevState.channels.concat(json) }})
             })
     }
 
@@ -111,11 +114,9 @@ export default class Login extends Component {
                         {'}\n'}
                     </pre>
                     <pre>
-                        {'{\n'}
-                        username: {this.state.user.username + '\n'}
-                        name: {this.state.user.name + '\n'}
-                        email: {this.state.user.email + '\n'}
-                        {'}\n'}
+                        channels: {this.state.channels.map(chan => {
+                            return chan.name
+                        })}
                     </pre>
                 </div>}
             </div>
