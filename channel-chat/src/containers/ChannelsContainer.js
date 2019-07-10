@@ -1,10 +1,15 @@
 import React, {Component} from 'react'
 import $ from 'jquery';
 import ChannelListItem from '../components/ChannelListItem'
+
+import UserPopUp from '../components/UserPopUp'
+import Message from '../components/Message'
 import Channel from '../components/Channel'
 import NewChannelModal from '../components/NewChannelModal'
 import AddChannelModal from '../components/AddChannelModal'
 import MessageField from '../components/MessageField'
+
+
 
 export default class ChannelsContainer extends Component {
 
@@ -13,6 +18,7 @@ export default class ChannelsContainer extends Component {
         activeChannel: null,
         message: null,
         userChannels: []
+
     }
 
     constructor() {
@@ -72,6 +78,7 @@ export default class ChannelsContainer extends Component {
     } 
 
 
+
     getChannelMessages = (channel) => {
         let token = this.getToken()
         fetch('http://localhost:3000/api/v1/messages', {
@@ -92,6 +99,7 @@ export default class ChannelsContainer extends Component {
 
     }
     
+
 
     changeChannel = (channel) => {
         this.setState({
@@ -148,6 +156,7 @@ export default class ChannelsContainer extends Component {
 
     handleChannelCreate = (channel) => {
          console.log(channel)
+
        
         // let token = this.getToken()
         // fetch('http://localhost:3000/api/v1/channels', {
@@ -182,22 +191,27 @@ export default class ChannelsContainer extends Component {
         this.el.scrollIntoView({ behavior: 'smooth' });
     }
 
+
     render(){
 
         return (
             <div><br></br>
 
+
                 <div className="ui grid">
                     <div className="four wide column">
                         <div className="ui vertical fluid tabular menu">
+                            <UserPopUp />
                             <h1>#Channels</h1>
                                 <br></br>
+
                             <NewChannelModal handleSubmit={this.handleChannelCreate} />
                             <AddChannelModal />
                             <br></br>
                             <br></br>
                             {
                             this.state.userChannels.map(chan => {
+
                                return <ChannelListItem key={chan.id} activeChannel={this.state.activeChannel} channelSelect={this.changeChannel} channel={chan}  />
                             })}
                         </div>
@@ -207,7 +221,7 @@ export default class ChannelsContainer extends Component {
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
-                                    {this.state.activeChannel ? <Channel messages={this.state.messages} currentChannel={this.state.activeChannel} /> : null}
+                                    {this.state.activeChannel ? <Channel messages={this.state.messages} currentChannel={this.state.activeChannel}/> : null}
                                     <div ref={el => { this.el = el; }} />
                                 </div>
                             </div>
@@ -218,6 +232,7 @@ export default class ChannelsContainer extends Component {
                         </div>
                     </div>
                 </div>
+                
             </div>
         )
     }
