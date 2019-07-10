@@ -5,12 +5,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <main>
-        <div className="header">
-          <h1>SmackChat</h1>
-        </div>
-      <Primary/>
-      </main>
+      <Primary />
     </div>
     
   );
