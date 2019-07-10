@@ -10,7 +10,7 @@ class Channel extends Component {
             
             <div className="ui feed feed-window">
                 {this.props.messages !== undefined ? this.props.messages.map(m => {
-                    return <Message key={m.id} message={m} />
+                    return <Message key={m.id} message={m}/>
                 }):null
                 }
             </div>

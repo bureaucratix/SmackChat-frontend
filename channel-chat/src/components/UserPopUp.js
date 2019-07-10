@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Modal, Header, Image} from 'semantic-ui-react'
 
+
 class UserPopUp extends Component {
   state = { 
     open: false,
@@ -38,7 +39,10 @@ class UserPopUp extends Component {
     const payload = {user: this.state.user};
     const config = {
       method: 'PUT',
-      headers: { 'Authorization': 'Bearer ' + token},
+      headers: { 
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(payload)
     };
     fetch(`http://localhost:3000/api/v1/users/${this.state.user.id}`, config)
@@ -76,20 +80,17 @@ class UserPopUp extends Component {
             <Image wrapped size='medium' src={this.state.user.img_url} />
             <Modal.Description>
               <Header>Default Profile Image</Header>
-              <p>We've found the following gravatar image associated with your e-mail address.</p>
+              <p>This is Your Current Profile Image</p>
               <p>Is it okay to use this photo?</p>
               <form onSubmit={this.handleSubmit}>
-              <label>
-                Add or Edit Profile Image:
-                <input type="text" value={this.state.user.img_url} onChange={this.handleChange}/>
-              </label>
-            </form>
+                <label>
+                  Add/Edit Image;
+                  <input type="text" placeholder="Add Image URL" value={this.state.value} onChange={this.handleChange}/>
+                </label>
+              </form>
+
             </Modal.Description>
           </Modal.Content>
-          <Modal.Actions>
-            <Button negative>No</Button>
-            <Button positive icon='checkmark' labelPosition='right' content='Yes' />
-          </Modal.Actions>
         </Modal>
       </div>
     )

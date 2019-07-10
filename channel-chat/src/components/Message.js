@@ -2,6 +2,33 @@ import React, {Component} from 'react'
 import Reply from './Reply.js'
 class Message extends Component  {
 
+    state = {
+        user_img_url: null
+    }
+
+    getToken() {
+        return localStorage.getItem('jwt')
+    } 
+
+
+    handleImage = () => {
+        let token = this.getToken()
+        fetch(`http://localhost:3000/api/v1/users/${this.props.message.user_id})`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })        
+        .then(resp => resp.json())
+        .then(data => {
+            this.setState({
+                user_img_url: data.img_url
+            })
+        })
+        }
+
+componentDidMount() {
+    this.handleImage()
+}
 
 showReplies = () => {
     return this.props.message.replies.map(m => {
@@ -17,7 +44,7 @@ render() {
     return (
         < div className="event" >
             <div className="label">
-                <i className ="user icon"> </i>
+               {this.state.user_img_url? <img className="ui medium circular image" src={this.state.user_img_url} alt=''/>: <i className ="user icon"> </i>} 
             </div>
             <div className="content">
                 <div className="summary">

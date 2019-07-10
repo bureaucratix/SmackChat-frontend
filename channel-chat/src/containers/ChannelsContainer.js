@@ -15,7 +15,9 @@ export default class ChannelsContainer extends Component {
     state = {
         channels: [],
         activeChannel: null,
-        message: null
+        message: null,
+        
+        
     }
 
     constructor() {
@@ -129,6 +131,8 @@ export default class ChannelsContainer extends Component {
             })
     }
 
+   
+
     handleChannelCreate = (ev) => {
     
        
@@ -181,7 +185,7 @@ export default class ChannelsContainer extends Component {
                             <UserPopUp />
                             <h1>#Channels</h1>
                                 <br></br>
-                            <NewChannelModal handleSubmit={this.handleChannelCreate} />
+                            {/* <NewChannelModal handleSubmit={this.handleChannelCreate} /> */}
                             <br></br>
                             <br></br>
                             {
@@ -196,7 +200,7 @@ export default class ChannelsContainer extends Component {
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
-                                    {this.state.activeChannel ? <Channel messages={this.state.messages} currentChannel={this.state.activeChannel} /> : null}
+                                    {this.state.activeChannel ? <Channel messages={this.state.messages} currentChannel={this.state.activeChannel}/> : null}
                                     <div ref={el => { this.el = el; }} />
                                 </div>
                             </div>
