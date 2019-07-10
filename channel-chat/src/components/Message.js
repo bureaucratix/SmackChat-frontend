@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import Reply from './Reply.js'
+
 class Message extends Component  {
+
 
     state = {
         user_img_url: null
@@ -30,13 +32,19 @@ componentDidMount() {
     this.handleImage()
 }
 
+openThread = () => {
+    console.log(this.props.channelId)
+}
+
+
+
 showReplies = () => {
     return this.props.message.replies.map(m => {
         return <Reply key={m.id} message={m} />
     })
 }
 
-  content = this.props.message.content
+ content = this.props.message.content
  user_name = this.props.message.user_name
  created_at = this.props.message.created_at
     
@@ -58,14 +66,20 @@ render() {
                 </div>
                 <div className="extra images"> </div>
                 <div className="meta">
-                    <a className="like">
+                    <a onClick={this.likeOrUnlike}className="like">
                         <i className="like icon"></i> 
-                            </a>
+                    </a>
+                    <a onClick={this.openThread} className="comments-link">
+                        {this.props.message.replies ? 
+                            this.props.message.replies.length === 1 ? `1 reply` : `${this.props.message.replies.length} replies`
+                         : 
+                            'reply to this'}
+                    </a>
                 </div>
             </div>
-            <div className="ui segments">
+            {/* <div className="ui segments">
                 {this.props.message.replies ? this.showReplies() : null}
-            </div>
+            </div> */}
 
         </div>
      
