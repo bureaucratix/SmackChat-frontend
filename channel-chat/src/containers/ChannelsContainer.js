@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ChannelListItem from '../components/ChannelListItem'
+import Channel from '../components/Channel'
 import Message from '../components/Message'
 import MessageField from '../components/MessageField'
 
@@ -42,7 +43,7 @@ export default class ChannelsContainer extends Component {
     
 
 
-    getToken(jwt) {
+    getToken() {
         return localStorage.getItem('jwt')
     } 
 
@@ -95,14 +96,11 @@ export default class ChannelsContainer extends Component {
             })
     }
 
-
-
-
-
     render(){
 
         return (
             <div><br></br>
+
                 <div className="ui grid">
                     <div className="four wide column">
                         <div className="ui vertical fluid tabular menu">
@@ -114,6 +112,12 @@ export default class ChannelsContainer extends Component {
                             })}
                         </div>
                     </div>
+// <<<<<<< channel-component
+//                 </div>
+//                 <div className="twelve wide stretched column">
+//                     <div className="ui segment">
+//                             {this.state.activeChannel ? <Channel currentChannel={this.state.activeChannel} /> : null}
+// =======
                     <div className="twelve wide stretched column">
                         <div className="ui segment">  
                                 <div className="ui feed">
@@ -123,12 +127,13 @@ export default class ChannelsContainer extends Component {
                                     }):null}
                                 </div>
                             {
-                                this.state.activeChannel !== null ?
+                                this.state.activeChannel ?
                                 <MessageField handleSubmit={this.postMessage} channel={this.state.activeChannel}/> :null
                             }
                           
 
                         </div>
+// >>>>>>> master
                     </div>
                 </div>
             </div>
