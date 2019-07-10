@@ -2,18 +2,10 @@ import React from 'react'
 
 const Message = (props) =>  {
 
-    let content = ""
-    let user_name = ''
-    let created_at = ""
-    if(props.message.content == undefined) {
-         content = props.message.message.content
-        user_name = props.message.message.user_name
-        created_at = props.message.message.created_at
-    } else {
-         content = props.message.content
-        user_name = props.message.user_name
-        created_at = props.message.created_at
-    }
+    let    content = props.message.content
+    let  user_name = props.message.user_name
+    let  created_at = props.message.created_at
+
 
   
     return (

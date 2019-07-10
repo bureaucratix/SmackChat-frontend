@@ -7,10 +7,13 @@ import ChannelsContainer from './containers/ChannelsContainer'
 function App() {
   return (
     <div className="App">
+      <main>
        <SignUp/>
       <Login />
       <ChannelsContainer/>
+      </main>
     </div>
+    
   );
 }
 

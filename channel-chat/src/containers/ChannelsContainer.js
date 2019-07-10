@@ -46,13 +46,36 @@ export default class ChannelsContainer extends Component {
         return localStorage.getItem('jwt')
     } 
 
+
     changeChannel = (channel) => {
-        this.setState({
-            activeChannel: channel,
-            messages: channel.messages
+
+        let cw = document.getElementById('channel-window')
+        let loader = document.createElement('img')
+        loader.src = "https://media1.tenor.com/images/556e9ff845b7dd0c62dcdbbb00babb4b/tenor.gif?itemid=5300368"
+        loader.style = "width: 300px;"
+        loader.id = 'loader'
+        cw.appendChild(loader)
+        let token = this.getToken()
+        fetch('http://localhost:3000/api/v1/messages', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
         })
+            .then(res => res.json())
+            .then(json => {
+                let currentMessages = json.filter(m => m.channel_id === channel.id)
+                
+                
+                this.setState({
+                    activeChannel: channel,
+                   messages: currentMessages
+                })
+                loader.remove()
+            })
+
     }
 
+    
     postMessage = (ev) => {
         ev.preventDefault()
        let content =  ev.target[0].value
@@ -72,7 +95,7 @@ export default class ChannelsContainer extends Component {
             .then(res => res.json() )
             .then(json => 
                 this.setState(prevState => {
-                return { messages: prevState.messages.concat(json)} 
+                return { messages: prevState.messages.concat(json.message)} 
             })
             )
         
@@ -95,9 +118,17 @@ export default class ChannelsContainer extends Component {
             })
     }
 
+    componentDidMount() {
+        this.scrollToBottom();
+    }
 
+    componentDidUpdate() {
+        this.scrollToBottom();
+    }
 
-
+    scrollToBottom() {
+        this.el.scrollIntoView({ behavior: 'smooth' });
+    }
 
     render(){
 
@@ -106,8 +137,7 @@ export default class ChannelsContainer extends Component {
                 <div className="ui grid">
                     <div className="four wide column">
                         <div className="ui vertical fluid tabular menu">
-                            <h1>Channels</h1>
-                        <div className="ui divider"></div>
+                            <h1>#Channels</h1>
                             {
                             this.state.channels.map(chan => {
                                return <ChannelListItem key={chan.id} activeChannel={this.state.activeChannel} channelSelect={this.changeChannel} channel={chan}  />
@@ -115,13 +145,16 @@ export default class ChannelsContainer extends Component {
                         </div>
                     </div>
                     <div className="twelve wide stretched column">
-                        <div className="ui segment">  
+                        <div className="ui segment">
+                            <div id="channel-window" className = "scroll-feed">
                                 <div className="ui feed">
                                     {this.state.activeChannel?
-                                    this.state.messages.map(m => {
-                                    return <Message key={m.id} message={m} />
+                                    this.state.messages.map((m, index) => {
+                                    return <Message key={index} message={m} />
                                     }):null}
+                                    <div ref={el => { this.el = el; }} />
                                 </div>
+                            </div>
                             {
                                 this.state.activeChannel !== null ?
                                 <MessageField handleSubmit={this.postMessage} channel={this.state.activeChannel}/> :null
