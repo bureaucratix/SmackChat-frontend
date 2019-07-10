@@ -91,6 +91,7 @@ export default class ChannelsContainer extends Component {
             })
 
     }
+    
 
     changeChannel = (channel) => {
         this.setState({
