@@ -6,13 +6,17 @@ import NewChannelModal from '../components/NewChannelModal'
 import AddChannelModal from '../components/AddChannelModal'
 import MessageField from '../components/MessageField'
 
+import io from 'socket.io-client';
+
+
+
+
 export default class ChannelsContainer extends Component {
 
     state = {
         channels: [],
         activeChannel: null,
-        message: null,
-        userChannels: []
+        messages: [],
     }
 
     constructor() {
@@ -59,7 +63,7 @@ export default class ChannelsContainer extends Component {
                  
                     console.log('userChannels:', channels)
                     this.setState({
-                         userChannels: channels
+                         channels: channels
                     })
                 })
         }
@@ -120,10 +124,11 @@ export default class ChannelsContainer extends Component {
             }),
         })
             .then(res => res.json() )
-            .then(json => 
+            .then(json => {
+                console.log("message", json.message)
                 this.setState(prevState => {
                 return { messages: prevState.messages.concat(json.message)} 
-            })
+            })}
             )
         
 
@@ -148,25 +153,6 @@ export default class ChannelsContainer extends Component {
 
     handleChannelCreate = (channel) => {
          console.log(channel)
-       
-        // let token = this.getToken()
-        // fetch('http://localhost:3000/api/v1/channels', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Authorization': 'Bearer ' + token
-        //     },
-        //     body: JSON.stringify({
-        //         name: channel.channelName,
-        //         user_id: this.state.user.id,
-        //     }),
-        // })
-        //     .then(res => res.json())
-        //     .then(json =>
-        //         this.setState(prevState => {
-        //             return { channels: prevState.channels.concat(json.channel) }
-        //         })
-        //     )
 
     }
 
@@ -197,7 +183,7 @@ export default class ChannelsContainer extends Component {
                             <br></br>
                             <br></br>
                             {
-                            this.state.userChannels.map(chan => {
+                            this.state.channels.map(chan => {
                                return <ChannelListItem key={chan.id} activeChannel={this.state.activeChannel} channelSelect={this.changeChannel} channel={chan}  />
                             })}
                         </div>
