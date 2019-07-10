@@ -12,7 +12,7 @@ class Channel extends Component {
 
     render() {
         return (
-            <div className="ui feed">
+            <div className="ui feed feed-window">
             {this.props.currentChannel.messages.map(m => {
                     return <Message key={m.id} message={m} />
                 })

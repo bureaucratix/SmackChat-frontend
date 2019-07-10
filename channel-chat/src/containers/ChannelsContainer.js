@@ -50,12 +50,12 @@ export default class ChannelsContainer extends Component {
 
     changeChannel = (channel) => {
 
-        let cw = document.getElementById('channel-window')
-        let loader = document.createElement('img')
-        loader.src = "https://media1.tenor.com/images/556e9ff845b7dd0c62dcdbbb00babb4b/tenor.gif?itemid=5300368"
-        loader.style = "width: 300px;"
-        loader.id = 'loader'
-        cw.appendChild(loader)
+        // let cw = document.getElementById('channel-window')
+        // let loader = document.createElement('img')
+        // loader.src = "https://media1.tenor.com/images/556e9ff845b7dd0c62dcdbbb00babb4b/tenor.gif?itemid=5300368"
+        // loader.style = "width: 300px;"
+        // loader.id = 'loader'
+        // cw.appendChild(loader)
         let token = this.getToken()
         fetch('http://localhost:3000/api/v1/messages', {
             headers: {
@@ -71,7 +71,7 @@ export default class ChannelsContainer extends Component {
                     activeChannel: channel,
                    messages: currentMessages
                 })
-                loader.remove()
+                // loader.remove()
             })
 
     }
@@ -149,8 +149,8 @@ export default class ChannelsContainer extends Component {
                     <div className="twelve wide stretched column">
                         <div className="ui segment">
 
-                            <div id="channel-window" className="scroll-feed">
-                                <div className="ui feed">
+                            <div className="scroll-feed">
+                                <div className="channel-window">
                                     {this.state.activeChannel ? <Channel currentChannel={this.state.activeChannel} /> : null}
                                     <div ref={el => { this.el = el; }} />
                                 </div>
