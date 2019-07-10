@@ -1,16 +1,15 @@
 import React from 'react';
-import Login from './containers/Login';
+import Primary from './containers/PrimaryContainer';
 import './App.css';
-import SignUp from './components/SignUp';
-import ChannelsContainer from './containers/ChannelsContainer'
 
 function App() {
   return (
     <div className="App">
       <main>
-       {/* <SignUp/>
-      <Login /> */}
-      <ChannelsContainer/>
+        <div className="header">
+          <h1>SmackChat</h1>
+        </div>
+      <Primary/>
       </main>
     </div>
     

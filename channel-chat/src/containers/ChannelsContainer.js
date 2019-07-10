@@ -48,14 +48,7 @@ export default class ChannelsContainer extends Component {
     } 
 
 
-    changeChannel = (channel) => {
-
-        // let cw = document.getElementById('channel-window')
-        // let loader = document.createElement('img')
-        // loader.src = "https://media1.tenor.com/images/556e9ff845b7dd0c62dcdbbb00babb4b/tenor.gif?itemid=5300368"
-        // loader.style = "width: 300px;"
-        // loader.id = 'loader'
-        // cw.appendChild(loader)
+    getChannelMessages = (channel) => {
         let token = this.getToken()
         fetch('http://localhost:3000/api/v1/messages', {
             headers: {
@@ -68,12 +61,19 @@ export default class ChannelsContainer extends Component {
                 
                 
                 this.setState({
-                    activeChannel: channel,
                    messages: currentMessages
                 })
                 // loader.remove()
             })
 
+    }
+
+    changeChannel = (channel) => {
+        this.setState({
+            activeChannel: channel,
+        })
+
+        this.getChannelMessages(channel)
     }
 
     

@@ -41,5 +41,10 @@ main {
    margin-right: 0.5%;
 }
 
+.header {
+   background-color: #f1f1f1;
+  padding: 20px;
+  text-align: center;
+}
 
 
