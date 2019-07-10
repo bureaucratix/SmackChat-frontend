@@ -42,6 +42,8 @@ export default class Login extends Component {
                     // console.log(userInfo)
                     this.saveToken(json.jwt)
                     this.getProfile()
+                } else {
+                    alert(json.message)
                 }
             })
     }

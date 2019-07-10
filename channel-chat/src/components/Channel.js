@@ -1,5 +1,7 @@
 
 import React, { Component } from 'react';
+import Message from './Message'
+
 
 class Channel extends Component {
     constructor() {
@@ -10,8 +12,16 @@ class Channel extends Component {
 
     render() {
         return (
-            <div> I'm a Channel. Hello! </div>
+            <div className="ui feed">
+            {this.props.currentChannel.messages.map(m => {
+                    return <Message key={m.id} message={m} />
+                })
+            }
+            </div>
         )
+        
+           
+    
     }
 }
 

@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import ChannelListItem from '../components/ChannelListItem'
+import Channel from '../components/Channel'
 import Message from '../components/Message'
 import MessageField from '../components/MessageField'
 
@@ -42,7 +43,7 @@ export default class ChannelsContainer extends Component {
     
 
 
-    getToken(jwt) {
+    getToken() {
         return localStorage.getItem('jwt')
     } 
 
@@ -134,6 +135,7 @@ export default class ChannelsContainer extends Component {
 
         return (
             <div><br></br>
+
                 <div className="ui grid">
                     <div className="four wide column">
                         <div className="ui vertical fluid tabular menu">
@@ -146,25 +148,24 @@ export default class ChannelsContainer extends Component {
                     </div>
                     <div className="twelve wide stretched column">
                         <div className="ui segment">
-                            <div id="channel-window" className = "scroll-feed">
+
+                            <div id="channel-window" className="scroll-feed">
                                 <div className="ui feed">
-                                    {this.state.activeChannel?
-                                    this.state.messages.map((m, index) => {
-                                    return <Message key={index} message={m} />
-                                    }):null}
+                                    {this.state.activeChannel ? <Channel currentChannel={this.state.activeChannel} /> : null}
                                     <div ref={el => { this.el = el; }} />
                                 </div>
                             </div>
                             {
-                                this.state.activeChannel !== null ?
-                                <MessageField handleSubmit={this.postMessage} channel={this.state.activeChannel}/> :null
+                                this.state.activeChannel ?
+                                    <MessageField handleSubmit={this.postMessage} channel={this.state.activeChannel} /> : null
                             }
-                          
-
                         </div>
+
                     </div>
+
                 </div>
-            </div>
+                  
+                </div>
         )
     
     }
