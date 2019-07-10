@@ -17,7 +17,7 @@ class Primary extends React.Component {
                     </div>
                     <SignUp/>
                     <Login />
-                    {/* <ChannelsContainer createChannel={this.addChannel} /> */}
+                    <ChannelsContainer createChannel={this.addChannel} />
                     
                 </main>
             </div>

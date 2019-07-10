@@ -5,8 +5,10 @@ import Channel from '../components/Channel'
 import NewChannelModal from '../components/NewChannelModal'
 import AddChannelModal from '../components/AddChannelModal'
 import MessageField from '../components/MessageField'
+import Cable from '../components/Cables';
+import { API_ROOT } from '../constants/index';
+import { ActionCable } from 'react-actioncable-provider';
 
-import io from 'socket.io-client';
 
 
 
@@ -14,8 +16,8 @@ import io from 'socket.io-client';
 export default class ChannelsContainer extends Component {
 
     state = {
-        channels: [],
-        activeChannel: null,
+        conversations: [],
+        conversation: null,
         messages: [],
     }
 
@@ -31,7 +33,24 @@ export default class ChannelsContainer extends Component {
     }
 
 
-        getUserChannels = (user) => {
+    componentDidMount() {
+        this.scrollToBottom();
+        this.getChannelsAndMessages();
+    }
+
+    getChannelsAndMessages = () => {
+        fetch(`${API_ROOT}/api/v1/channels`)
+            .then(res => res.json())
+            .then(conversations => {
+
+                this.setState({ conversations })
+            });
+    }
+
+
+
+        getUserChannelIds = (user) => {
+         console.log(user)
             let token = this.getToken()
             fetch('http://localhost:3000/api/v1/user_channels', {
                 headers: {
@@ -40,11 +59,10 @@ export default class ChannelsContainer extends Component {
             })
                 .then(res => res.json())
                 .then(json => {
-                    let chanArray = json.filter(userChannel => userChannel.user_id === user.id)
-                    this.renderChannels(chanArray)
-                 
+                let filtered =  json.filter(userChannel => userChannel.user_id === user.id)
+                    return filtered        
                 })
-
+                .catch(err => console.log(err))
         }
 
         renderChannels = (associations) => {
@@ -74,35 +92,15 @@ export default class ChannelsContainer extends Component {
     getToken() {
         return localStorage.getItem('jwt')
     } 
-
-
-    getChannelMessages = (channel) => {
-        let token = this.getToken()
-        fetch('http://localhost:3000/api/v1/messages', {
-            headers: {
-                'Authorization': 'Bearer ' + token
-            }
-        })
-            .then(res => res.json())
-            .then(json => {
-                let currentMessages = json.filter(m => m.channel_id === channel.id)
-                
-                
-                this.setState({
-                   messages: currentMessages
-                })
-                // loader.remove()
-            })
-
-    }
     
 
     changeChannel = (channel) => {
+        console.log('Active Channel: ', channel)
         this.setState({
-            activeChannel: channel,
+            conversation: channel,
         })
 
-        this.getChannelMessages(channel)
+        
     }
 
     
@@ -120,7 +118,7 @@ export default class ChannelsContainer extends Component {
             body: JSON.stringify({
                 content: content,
                 user_id: this.state.user.id,
-                channel_id: this.state.activeChannel.id
+                channel_id: this.state.conversation.id
             }),
         })
             .then(res => res.json() )
@@ -147,7 +145,7 @@ export default class ChannelsContainer extends Component {
             .then(json => {
                 console.log('profile:', json)
                 this.setState({ user: json.user })
-                 this.getUserChannels(json.user)
+                //  this.getUserChannels(json.user)
             })
     }
 
@@ -156,9 +154,7 @@ export default class ChannelsContainer extends Component {
 
     }
 
-    componentDidMount() {
-        this.scrollToBottom();
-    }
+
 
     componentDidUpdate() {
         this.scrollToBottom();
@@ -167,6 +163,25 @@ export default class ChannelsContainer extends Component {
     scrollToBottom() {
         this.el.scrollIntoView({ behavior: 'smooth' });
     }
+
+    handleReceivedConversation = response => {
+        const { conversation } = response;
+        this.setState({
+            conversations: [...this.state.conversations, conversation]
+        });
+    };
+
+    handleReceivedMessage = response => {
+        const { message } = response;
+        const conversations = [...this.state.conversations];
+        const conversation = conversations.find(
+            conversation => conversation.id === message.channel_id
+        );
+            console.log(conversation)
+        conversation.messages = [...conversation.messages, message];
+        this.setState({ conversations });
+    };
+
 
     render(){
 
@@ -182,9 +197,21 @@ export default class ChannelsContainer extends Component {
                             <AddChannelModal />
                             <br></br>
                             <br></br>
+                            <ActionCable
+                                channel={{ channel: 'ChannelsChannel' }}
+                                onReceived={this.handleReceivedConversation}
+                            />
+                            {this.state.conversations.length ? (
+                                <Cable
+                                    conversations={this.state.conversations}
+                                    handleReceivedMessage={this.handleReceivedMessage}
+                                />
+                            ) : null}
+
+                            
                             {
-                            this.state.channels.map(chan => {
-                               return <ChannelListItem key={chan.id} activeChannel={this.state.activeChannel} channelSelect={this.changeChannel} channel={chan}  />
+                            this.state.conversations.map(chan => {
+                               return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan}  />
                             })}
                         </div>
                     </div>
@@ -193,13 +220,13 @@ export default class ChannelsContainer extends Component {
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
-                                    {this.state.activeChannel ? <Channel messages={this.state.messages} currentChannel={this.state.activeChannel} /> : null}
+                                    {this.state.conversation ? <Channel messages={this.state.conversation.messages} currentChannel={this.state.conversation} /> : null}
                                     <div ref={el => { this.el = el; }} />
                                 </div>
                             </div>
                             {
-                                this.state.activeChannel ?
-                                    <MessageField handleSubmit={this.postMessage} channel={this.state.activeChannel} /> : null
+                                this.state.conversation ?
+                                    <MessageField handleSubmit={this.postMessage} channel={this.state.conversation} /> : null
                             }
                         </div>
                     </div>
