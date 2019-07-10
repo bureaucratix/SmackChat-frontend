@@ -79,8 +79,10 @@ class UserPopUp extends Component {
           <Modal.Content image>
             <Image wrapped size='medium' src={this.state.user.img_url} />
             <Modal.Description>
-              <Header>Default Profile Image</Header>
+              <Header>Dashboard</Header>
               <p>This is Your Current Profile Image</p>
+              
+              <br></br>
               <p>Is it okay to use this photo?</p>
               <form onSubmit={this.handleSubmit}>
                 <label>
