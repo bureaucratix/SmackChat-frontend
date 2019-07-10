@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import ChannelListItem from '../components/ChannelListItem'
-import Message from '../components/Message'
+import Channel from '../components/Channel'
 
 export default class ChannelsContainer extends Component {
 
@@ -37,7 +37,7 @@ export default class ChannelsContainer extends Component {
     
 
 
-    getToken(jwt) {
+    getToken() {
         return localStorage.getItem('jwt')
     } 
 
@@ -48,17 +48,13 @@ export default class ChannelsContainer extends Component {
         })
     }
 
-
-
-
-
     render(){
 
         return (
             <div><br></br>
             <div className="ui grid">
                 <div className="four wide column">
-                    <div className="ui vertical fluid tabular menu">
+                    <div className="ui vertical fluid main menu">
                         <h1>Channels</h1>
                         <div className="ui divider"></div>
                         {
@@ -69,10 +65,7 @@ export default class ChannelsContainer extends Component {
                 </div>
                 <div className="twelve wide stretched column">
                     <div className="ui segment">
-                            {this.state.activeChannel?
-                            this.state.activeChannel.messages.map(m => {
-                                return <Message message={m} />
-                            }):null}
+                            {this.state.activeChannel ? <Channel currentChannel={this.state.activeChannel} /> : null}
                     </div>
                 </div>
             </div>
