@@ -5,6 +5,7 @@
   pointer-events: none;
 }
 
+
 .app {
   background-color: #282c34;
   min-height: 100vh;
@@ -28,3 +29,22 @@
     transform: rotate(360deg);
   }
 }
+
+.scroll-feed {
+ height: 80vh;
+overflow-y: scroll;
+
+}
+
+main {
+   margin-left: 0.5%;
+   margin-right: 0.5%;
+}
+
+.header {
+   background-color: #f1f1f1;
+  padding: 20px;
+  text-align: center;
+}
+
+
