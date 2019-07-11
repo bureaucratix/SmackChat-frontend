@@ -45,6 +45,7 @@ export default class Login extends Component {
                 // console.log(userInfo)
                 this.saveToken(json.jwt)
                 this.getProfile()
+                this.props.reload()
             } else {
                 alert(json.message)
             }
@@ -96,7 +97,7 @@ export default class Login extends Component {
                     <input type="text" placeholder="username" ref={this.username} />
                     <input type="password" placeholder="password" ref={this.password} />
                     <input type="submit" value="log in" />
-                    <button type="button" onClick={this.logout}>log out</button>
+                    <button type="button" onClick={this.props.logout}>log out</button>
                 </form>
                 <div><Link to="/signup"> Don't have an account? Sign up!</Link></div>
                 <div>
