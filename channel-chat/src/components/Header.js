@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
 import {Dropdown} from 'semantic-ui-react'
-import { BrowserRouter as Route, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 export default class Header extends Component {
 
+logout = () => {
+    localStorage.setItem('jwt', '')
+}
 
     render() {
         return(
@@ -11,11 +14,21 @@ export default class Header extends Component {
             <div className="header "><h1>SmackChat</h1>
 
             
-                </div>
+            </div>
+
                 <div className="right menu">
-                    <a className="ui item">
-                        Logout
-                    </a>
+                    {this.props.user?
+                        <a className="ui item">
+                            You're logged in!--
+                            <Link onClick={this.logout} to="/login" >Logout</Link>
+                        </a>
+
+                    : 
+                        <a className="ui item">
+                            Not Logged In---
+                            <Link to="/login" >Login</Link>
+                        </a>
+                    }
                 </div>
             </div>
 

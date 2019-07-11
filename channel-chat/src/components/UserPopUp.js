@@ -81,7 +81,7 @@ class UserPopUp extends Component {
             <Image wrapped size='medium'  />
             <Modal.Description>
               <Header>Dashboard</Header>
-              {this.state.user.img_url ? <div className= "ui card"><p>This is Your Current Profile Image</p>
+              {this.state.user ? <div className= "ui card"><p>This is Your Current Profile Image</p>
                 <img className="ui small image"src={this.state.user.img_url}></img></div>:null}
              
 
