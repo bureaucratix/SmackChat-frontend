@@ -45,6 +45,7 @@ export default class Login extends Component {
                 } else {
                     alert(json.message)
                 }
+                window.location.reload()
             })
     }
 

@@ -77,7 +77,7 @@ class UserPopUp extends Component {
         <Modal size={size} open={open} onClose={this.close}>
           <Modal.Header>My Profile</Modal.Header>
           <Modal.Content image>
-            <Image wrapped size='medium' src={this.state.user.img_url} />
+            <Image wrapped size='medium'  />
             <Modal.Description>
               <Header>Dashboard</Header>
               <p>This is Your Current Profile Image</p>
