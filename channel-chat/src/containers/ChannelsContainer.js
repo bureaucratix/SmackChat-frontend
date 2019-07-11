@@ -8,14 +8,10 @@ import Channel from '../components/Channel'
 import NewChannelModal from '../components/NewChannelModal'
 import AddChannelModal from '../components/AddChannelModal'
 import MessageField from '../components/MessageField'
+import Thread from '../components/Thread'
 import Cable from '../components/Cables';
 import { API_ROOT } from '../constants/index';
 import { ActionCable } from 'react-actioncable-provider';
-
-
-
-
-
 
 
 export default class ChannelsContainer extends Component {
@@ -32,10 +28,56 @@ export default class ChannelsContainer extends Component {
         this.password = React.createRef()
 
         if (this.getToken()) {
-                this.getProfile()
-         
+            this.getChannels()
+            this.getProfile()
+        
+        }
+
+        this.state = {
+                channels: [],
+                activeChannel: null,
+                thread: null
         }
     }
+    
+    
+    convertTime = (time) => {
+        const months = {
+          "01": "Jan",
+          "02": "Feb",
+          "03": "Mar",
+          "04": "Apr",
+          "05": "May",
+          "06": "Jun",
+          "07": "Jul",
+          "08": "Aug",
+          "09": "Sep",
+          "10": "Oct",
+          "11": "Nov",
+          "12": "Dec",
+        }
+        const rn = new Date()
+        let today = `${String(rn.getFullYear())}-${String(rn.getMonth() + 1).length===2?String(rn.getMonth() + 1):"0"+String(rn.getMonth() + 1)}-${String(rn.getDate())}`;
+        const date = time.split("T")[0]
+        time = time.split("T")[1]
+        let hour = time.split(":")[0]
+        let minute = time.split(":")[1]
+        if (date === today) {
+          return `Today at ${hour}:${minute}`
+        }else{
+          return `${months[date.split("-")[1]]} ${date.split("-")[2]} at ${hour}:${minute}`
+        }
+      }
+
+    toggleThread = (message) => {
+
+        this.setState({
+            thread: message
+        })
+
+        
+    }
+
 
 
     componentDidMount() {
@@ -163,6 +205,7 @@ export default class ChannelsContainer extends Component {
 
     componentDidUpdate() {
         this.scrollToBottom();
+        console.log(this.state)
     }
 
     scrollToBottom() {
@@ -190,7 +233,7 @@ export default class ChannelsContainer extends Component {
 
 
     render(){
-
+        let width = this.state.thread ? 'seven' : 'twelve'
         return (
             <div><br></br>
 
@@ -226,23 +269,42 @@ export default class ChannelsContainer extends Component {
                             })}
                         </div>
                     </div>
-                    <div className="twelve wide stretched column">
+                    <div className={`${width} wide right floated column`} >
                         <div className="ui segment">
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
-
-                                    {this.state.conversation ? <Channel messages={this.state.conversation.messages} currentChannel={this.state.conversation} /> : null}
+                                    {this.state.activeChannel ? <Channel convertTime={this.convertTime} toggleThread={this.toggleThread} messages={this.state.messages} currentChannel={this.state.activeChannel} /> : null}
 
                                     <div ref={el => { this.el = el; }} />
                                 </div>
                             </div>
                             {
+                                this.state.activeChannel ?
+                                    <MessageField placeholder={"Message " + this.state.activeChannel.name} handleSubmit={this.postMessage} channel={this.state.activeChannel} /> : null
+                            }
+                        </div>
+                    </div>
+                    {/* -----Sidebar for THreads------- */}
+                    { this.state.thread?
+                    <div className="five wide stretched column">
+                        <div className="ui segment">
+
+                            <div className="scroll-feed">
+                                <div className="channel-window">
+                                    <Thread convertTime={this.convertTime} message={this.state.thread} />
+                                </div>
+                            </div>
+                            {
+                             
                                 this.state.conversation ?
                                     <MessageField handleSubmit={this.postMessage} channel={this.state.conversation} /> : null
                             }
                         </div>
+                        
                     </div>
+                    :
+                    null}
                 </div>
                 
             </div>

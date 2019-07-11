@@ -4,15 +4,15 @@ import React, { Component } from 'react';
 export default class SignUp extends Component {
 
 
-    constructor() {
-        super()
-        // this.state = {
-        //     username: '',
-        //     name: '', 
-        //     password: '', 
-        //     email: ''
-        // }
-    }
+    // constructor() {
+    //     super()
+    //     this.state = {
+    //         username: '',
+    //         name: '', 
+    //         password: '', 
+    //         email: ''
+    //     }
+    // }
 
     handleSubmit = (event) => {
         event.preventDefault();
