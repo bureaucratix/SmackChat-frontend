@@ -134,9 +134,40 @@ export default class ChannelsContainer extends Component {
             })}
             )
         ev.target.reset()
-
          
     }   
+
+    postReply = (ev) => {
+        ev.preventDefault()
+        console.log(this.state.user.id)
+        console.log(this.state.thread)
+        
+        let content =  ev.target[0].value
+        console.log(content)
+        let token = this.getToken()
+        fetch(`${API_ROOT}/replies`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                content: content,
+                user_id: this.state.user.id,
+                message_id: this.state.thread.id
+            }),
+        })
+            .then(res => res.json() )
+            .then(json => {
+                console.log(json)
+                // this.setState(prevState => {
+                // return { messages: prevState.messages.concat(json.message)} 
+            // })
+            })
+            
+        ev.target.reset()
+         
+    }  
 
 
     getProfile = () => {
@@ -317,7 +348,7 @@ export default class ChannelsContainer extends Component {
                             </div>
                             {
                                 this.state.conversation ?
-                                    <MessageField handleSubmit={this.postMessage} channel={this.state.conversation} /> : null
+                                    <MessageField handleSubmit={this.postReply} placeholder={"Reply to this thread"} channel={this.state.conversation} /> : null
                             }
                         </div>
                         
