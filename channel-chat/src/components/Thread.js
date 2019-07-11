@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { API_ROOT } from '../constants/index';
-import { Divider } from 'semantic-ui-react';
+import { Divider, Button } from 'semantic-ui-react';
 // import { Button, Header, Icon, Image, Menu, Segment, Sidebar } from 'semantic-ui-react'
 
 export default class Thread extends Component {
@@ -56,6 +56,9 @@ export default class Thread extends Component {
     render(){
         return (
             <div className="ui feed feed-window segment">
+                <button onClick={this.props.close} className="ui small icon button">
+                    <i className="close icon"></i>
+                </button>
                 <div className="event" >
                     <div className="label">
                         {this.state.user_img_url? <img className="ui medium circular image" src={this.state.user_img_url} alt=''/>: <i className ="user icon"> </i>} 
@@ -76,7 +79,7 @@ export default class Thread extends Component {
                 </div>
                 {/* loop through replies of this.state.message and map to these divs */}
                     <>
-                    <div className="ui segment right floated">
+                        <div className="ui segment right floated">
 
                         <div className="summary">
                             <a>Test User  </a>

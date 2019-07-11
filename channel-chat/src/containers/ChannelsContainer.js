@@ -31,7 +31,8 @@ export default class ChannelsContainer extends Component {
             conversations: [],
             conversation: null,
             messages: [],
-            thread: null
+            thread: null,
+            threadVisible: false
         }
     }
     
@@ -92,9 +93,11 @@ export default class ChannelsContainer extends Component {
             conversation: channel,
         })
     }
+
     toggleThread = (message) => {
         this.setState({
-            thread: message
+            thread: message,
+            threadVisible: !this.state.threadVisible
         })
     }
 
@@ -221,7 +224,7 @@ export default class ChannelsContainer extends Component {
 
 
     render(){
-        let width = this.state.thread ? 'seven' : 'twelve'
+        let width = this.state.threadVisible ? 'seven' : 'twelve'
         return (
             <div><br></br>
 
@@ -277,13 +280,13 @@ export default class ChannelsContainer extends Component {
                         </div>
                     </div>
                     {/* -----Sidebar for THreads------- */}
-                    { this.state.thread !== null ?
+                    { this.state.threadVisible === true ?
                     <div className="five wide stretched column">
                         <div className="ui segment">
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
-                                    <Thread convertTime={this.convertTime} message={this.state.thread} />
+                                    <Thread convertTime={this.convertTime} close={this.toggleThread} message={this.state.thread} />
                                 </div>
                             </div>
                             {
