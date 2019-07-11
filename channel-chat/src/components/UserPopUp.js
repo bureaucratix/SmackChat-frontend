@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { Button, Modal, Header, Image} from 'semantic-ui-react'
+import { API_ROOT } from '../constants/index';
 
 
 class UserPopUp extends Component {
   state = { 
     open: false,
-    user: '' }
+    user: {} }
   
 
     componentDidMount() {
@@ -18,7 +19,7 @@ class UserPopUp extends Component {
 
     fetchUser = () => {
     let token = this.getToken()
-    fetch('http://localhost:3000/api/v1/profile', {
+      fetch(`${API_ROOT}/profile`, {
       headers: {
         'Authorization': 'Bearer ' + token
       }
@@ -45,7 +46,7 @@ class UserPopUp extends Component {
       },
       body: JSON.stringify(payload)
     };
-    fetch(`http://localhost:3000/api/v1/users/${this.state.user.id}`, config)
+    fetch(`${ API_ROOT }/users/${this.state.user.id}`, config)
     .then(resp => resp.json())
     .then(data => {
       console.log(data)
@@ -80,14 +81,20 @@ class UserPopUp extends Component {
             <Image wrapped size='medium'  />
             <Modal.Description>
               <Header>Dashboard</Header>
-              <p>This is Your Current Profile Image</p>
-              
+              {this.state.user.img_url ? <div className= "ui card"><p>This is Your Current Profile Image</p>
+                <img className="ui small image"src={this.state.user.img_url}></img></div>:null}
+             
+
               <br></br>
               <p>Is it okay to use this photo?</p>
-              <form onSubmit={this.handleSubmit}>
+              <form className="ui form"onSubmit={this.handleSubmit}>
                 <label>
                   Add/Edit Image;
-                  <input type="text" placeholder="Add Image URL" value={this.state.value} onChange={this.handleChange}/>
+                  <input type="text" className="ui field" placeholder="Add Image URL" value={this.state.value} onChange={this.handleChange}/>
+                  <br></br>
+                  <br></br>
+                  <br></br>
+                  <input className="ui button save"type="submit" value="Save Changes"></input>
                 </label>
               </form>
 

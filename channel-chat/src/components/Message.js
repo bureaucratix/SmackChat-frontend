@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Reply from './Reply.js'
+import { API_ROOT } from '../constants/index';
 
 class Message extends Component  {
 
@@ -15,7 +16,7 @@ class Message extends Component  {
 
     handleImage = () => {
         let token = this.getToken()
-        fetch(`http://localhost:3000/api/v1/users/${this.props.message.user_id})`, {
+        fetch(`${ API_ROOT}/users/${this.props.message.user_id})`, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }

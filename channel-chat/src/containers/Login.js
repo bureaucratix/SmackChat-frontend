@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { API_ROOT } from '../constants/index';
 
 
 export default class Login extends Component {
@@ -25,7 +26,7 @@ export default class Login extends Component {
         let username = this.username.current.value
         let password = this.password.current.value
 
-        fetch('http://localhost:3000/api/v1/login', {
+        fetch(`${API_ROOT}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -57,7 +58,7 @@ export default class Login extends Component {
 
     getProfile = () => {
         let token = this.getToken()
-        fetch('http://localhost:3000/api/v1/profile', {
+        fetch(`${API_ROOT}/profile`, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }

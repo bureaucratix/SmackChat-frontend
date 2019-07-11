@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Header, Image, Modal, Form, Input, Select, Dropdown } from 'semantic-ui-react'
-
+import { API_ROOT } from '../constants/index';
 
 
 class ModalModalExample extends React.Component {
@@ -27,13 +27,11 @@ class ModalModalExample extends React.Component {
     }
 
     getChannelOptions(channels) {
-        console.log('options l1',channels)
         let options = []
         channels.map(chan => {
            let obj = {value: chan.name, text: chan.name, key: chan.id}
             options.push(obj)
         })
-        console.log('options: ', options)
 
         this.setState({
             channelOptions: options
@@ -41,14 +39,13 @@ class ModalModalExample extends React.Component {
     }
     getChannels = () => {
         let token = this.getToken()
-        fetch('http://localhost:3000/api/v1/channels', {
+        fetch(`${API_ROOT}/channels`, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
         })
             .then(res => res.json())
             .then(json => {
-                console.log('channels:', json)
                 this.getChannelOptions(json)
                 this.setState(prevState => {
                     return { channels: json }

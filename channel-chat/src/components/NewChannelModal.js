@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button, Header, Modal, Form, Input, Search } from 'semantic-ui-react'
-
+import { Button, Header, Modal, Form, Input, Dropdown } from 'semantic-ui-react'
+import { API_ROOT } from '../constants/index';
 const userOptions = []
 
 
@@ -17,6 +17,11 @@ class ModalModalExample extends React.Component {
             channelName: '',
             channelUsers: [],
             modalOpen: false
+        }
+
+        if (this.getToken()) {
+            this.getProfile()
+
         }
     }
 
@@ -41,22 +46,38 @@ class ModalModalExample extends React.Component {
         
     }   
 
+    getProfile = () => {
+        let token = this.getToken()
+        fetch(`${API_ROOT}/profile`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+            .then(json => {
+                this.setState({ user: json.user })
+            })
+    }
+
     componentDidMount() {
+        setTimeout(() => {
+
             let token = this.getToken()
-            fetch('http://localhost:3000/api/v1/users', {
+        fetch(`${ API_ROOT }/users`, {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             })
                 .then(res => res.json())
                 .then(json => {
-                    console.log('users:', json)
-                    json.forEach(function(user) {
+                    let filtered = json.filter(user => user.id !== this.state.user.id)
+                    filtered.forEach(function(user) {
                         userOptions.push({
-                        value: user.username, text: user.username,
+                        value: user, text: user.username,
                         key: user.id})
                     })
                 })  
+        }, 2000)
     }
 
 
