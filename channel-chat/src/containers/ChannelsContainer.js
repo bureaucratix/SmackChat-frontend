@@ -11,6 +11,7 @@ import Thread from '../components/Thread'
 import Cable from '../components/Cables';
 import { API_ROOT } from '../constants/index';
 import { ActionCable } from 'react-actioncable-provider';
+import { Form } from 'semantic-ui-react';
 
 
 export default class ChannelsContainer extends Component {
@@ -31,7 +32,7 @@ export default class ChannelsContainer extends Component {
             conversations: [],
             conversation: null,
             messages: [],
-                thread: null
+            thread: null
         }
     }
     
@@ -64,14 +65,7 @@ export default class ChannelsContainer extends Component {
         }
       }
 
-    toggleThread = (message) => {
-
-        this.setState({
-            thread: message
-        })
-
-        
-    }
+  
 
 
 
@@ -109,8 +103,11 @@ export default class ChannelsContainer extends Component {
         this.setState({
             conversation: channel,
         })
-
-        
+    }
+    toggleThread = (message) => {
+        this.setState({
+            thread: message
+        })
     }
 
     
@@ -136,7 +133,7 @@ export default class ChannelsContainer extends Component {
                 return { messages: prevState.messages.concat(json.message)} 
             })}
             )
-        
+        ev.target.reset()
 
          
     }   
@@ -293,7 +290,7 @@ export default class ChannelsContainer extends Component {
                         </div>
                     </div>
                     {/* -----Sidebar for THreads------- */}
-                    { this.state.thread?
+                    { this.state.thread !== null ?
                     <div className="five wide stretched column">
                         <div className="ui segment">
 
@@ -303,7 +300,6 @@ export default class ChannelsContainer extends Component {
                                 </div>
                             </div>
                             {
-                             
                                 this.state.conversation ?
                                     <MessageField handleSubmit={this.postMessage} channel={this.state.conversation} /> : null
                             }
