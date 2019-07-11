@@ -5,6 +5,9 @@ import ChannelsContainer from './ChannelsContainer'
 
 class Primary extends React.Component {
 
+    getToken() {
+        return localStorage.getItem('jwt')
+    } 
 
     render() {
         
@@ -14,10 +17,9 @@ class Primary extends React.Component {
                     <div className="header">
                         <h1>SmackChat</h1>
                     </div>
-
-                    <SignUp/>
-                    <Login />
-                    <ChannelsContainer createChannel={this.addChannel} />
+                    {this.getToken() == undefined? <div><SignUp /><Login /></div>:<ChannelsContainer createChannel={this.addChannel} />}
+                    
+                    
                     
                 </main>
             </div>
