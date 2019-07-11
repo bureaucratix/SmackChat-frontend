@@ -290,7 +290,7 @@ export default class ChannelsContainer extends Component {
                             }
                         </div>
                     </div>
-                    {/* -----Sidebar for THreads------- */}
+                    {/* -----Sidebar for Threads------- */}
                     { this.state.thread?
                     <div className="five wide stretched column">
                         <div className="ui segment">
