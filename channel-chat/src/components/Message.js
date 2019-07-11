@@ -7,6 +7,7 @@ class Message extends Component  {
 
     state = {
         user_img_url: null
+        
     }
 
     getToken() {

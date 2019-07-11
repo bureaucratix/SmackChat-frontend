@@ -10,8 +10,6 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 class Primary extends React.Component {
 
 
-
-
     //-----Things that were in Login.js, maybe want them here to pass info to Header to display name and logout option-----
     constructor() {
         super()
