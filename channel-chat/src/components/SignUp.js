@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { API_ROOT } from '../constants/index';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
 
 export default class SignUp extends Component {
 
@@ -70,6 +72,7 @@ export default class SignUp extends Component {
                     <input type="password" placeholder="password"  id="password"/> */}
                     <input className="ui secondary button" type="submit" value="Sign Up" />
                 </form>
+                <div><Link to="/login"> I already have an account!</Link></div>
             </div>
         );
     }

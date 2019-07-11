@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { API_ROOT } from '../constants/index';
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
 
 export default class Login extends Component {
     state = {
-        username: ''
+        username: '',
+        isLoggedIn: false
     }
 
     constructor() {
@@ -33,27 +35,26 @@ export default class Login extends Component {
             },
             body: JSON.stringify({ user: { username, password } })
         })
-            .then(res => res.json())
-            .then(json => {
-                console.log('login:', json)
-                if (json && json.jwt) {
-                    // let base64Url = json.jwt.split('.')[1];
-                    // let base64 = base64Url.replace('-', '+').replace('_', '/');
-                    // let userInfo =  JSON.parse(atob(base64));
-                    // console.log(userInfo)
-                    this.saveToken(json.jwt)
-                    this.getProfile()
-                } else {
-                    alert(json.message)
-                }
-                window.location.reload()
-            })
+        .then(res => res.json())
+        .then(json => {
+            console.log('login:', json)
+            if (json && json.jwt) {
+                // let base64Url = json.jwt.split('.')[1];
+                // let base64 = base64Url.replace('-', '+').replace('_', '/');
+                // let userInfo =  JSON.parse(atob(base64));
+                // console.log(userInfo)
+                this.saveToken(json.jwt)
+                this.getProfile()
+                this.props.reload()
+            } else {
+                alert(json.message)
+            }
+        })            
     }
 
-    logout() {
-        this.clearToken()
-        this.setState({ username: '' })
-        return false
+    saveToken(jwt) {
+        localStorage.setItem('jwt', jwt)
+       
     }
 
     getProfile = () => {
@@ -66,17 +67,17 @@ export default class Login extends Component {
             .then(res => res.json())
             .then(json => {
                 console.log('profile:', json)
-                this.setState({ user: json.user })
+                this.setState({ user: json.user, isLoggedIn:true })
             })
     }
 
-  
-
-
-    saveToken(jwt) {
-        localStorage.setItem('jwt', jwt)
-       
+    logout() {
+        this.clearToken()
+        this.setState({ username: '' })
+        return false
     }
+
+
 
     clearToken(jwt) {
         localStorage.setItem('jwt', '')
@@ -87,7 +88,11 @@ export default class Login extends Component {
     }
 
     render() {
+        if (this.state.isLoggedIn === true){
+            return <Redirect to="/"/>
+        }
         return (
+<<<<<<< HEAD
             <div className="App ui two column centered grid">
                 <div className="column">
                 <form className="ui form" onSubmit={this.login}>
@@ -102,6 +107,17 @@ export default class Login extends Component {
                         <input className="ui secondary button" type="submit" value="log in" />
                         <button className="ui button" type="button" onClick={this.logout}>log out</button>
                 </form>
+=======
+            <div className="App">
+                <form onSubmit={this.login}>
+                    <input type="text" placeholder="username" ref={this.username} />
+                    <input type="password" placeholder="password" ref={this.password} />
+                    <input type="submit" value="log in" />
+                    <button type="button" onClick={this.props.logout}>log out</button>
+                </form>
+                <div><Link to="/signup"> Don't have an account? Sign up!</Link></div>
+                <div>
+>>>>>>> 7b3295ad8b9123ac6a4c5d03fa48a8792e1a09b4
                     user: {this.state.user && this.state.user.username || 'logged out'}
                 {this.state.user && <div>
                     <pre>
