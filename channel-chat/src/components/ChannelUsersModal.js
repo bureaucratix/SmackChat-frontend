@@ -6,7 +6,15 @@ let userOptions = []
 
 class ModalModalExample extends React.Component {
 
-    handleOpen = () => this.setState({ modalOpen: true })
+    handleOpen = () => {
+        userOptions = []
+        this.props.channelUsers.forEach(function (user) {
+            userOptions.push({
+                value: user, text: user.username,
+                key: user.id
+            })
+        })
+        this.setState({ modalOpen: true })}
 
     handleClose = () => this.setState({ modalOpen: false })
 
@@ -18,25 +26,6 @@ class ModalModalExample extends React.Component {
             modalOpen: false
         }
     }
-
-    componentDidMount() {
-        this.props.channelUsers.forEach(function (user) {
-            userOptions.push({
-                value: user, text: user.username,
-                key: user.id
-            })
-        })
-
-    }
-
-
-   
-
-
-
-
-
-
 
     render() {
         return (

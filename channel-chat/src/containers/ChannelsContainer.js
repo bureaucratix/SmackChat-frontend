@@ -27,6 +27,7 @@ export default class ChannelsContainer extends Component {
         }
 
         this.state = {
+            userConversations: [],
             conversations: [],
             conversation: null,
             messages: [],
@@ -83,7 +84,18 @@ export default class ChannelsContainer extends Component {
         fetch(`${API_ROOT}/channels`)
             .then(res => res.json())
             .then(conversations => {
-                this.setState({ conversations })
+                
+                let userConvos =  []
+                conversations.map(conv => {
+                    conv.users.map(user => {
+                        if(user.id === this.state.user.id) {
+                            userConvos.push(conv)
+                        } 
+                    })
+                })
+                console.log('User Convos: ', userConvos)
+                this.setState({ conversations: conversations, 
+                userConversations: userConvos})
             });
     }
 
@@ -255,8 +267,9 @@ export default class ChannelsContainer extends Component {
 
                             {
 
-                            this.state.conversations.map(chan => {
-                              return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan}  />
+                            this.state.userConversations.map(chan => {
+                                console.log("Channel : ", chan.users)
+                                    return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan} />   
                             })}
 
                         </div>
