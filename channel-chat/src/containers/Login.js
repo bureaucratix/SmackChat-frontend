@@ -92,6 +92,22 @@ export default class Login extends Component {
             return <Redirect to="/"/>
         }
         return (
+<<<<<<< HEAD
+            <div className="App ui two column centered grid">
+                <div className="column">
+                <form className="ui form" onSubmit={this.login}>
+                    <div className= "field">
+                        <label>Username</label>
+                        <input type="text" placeholder="username" ref={this.username} />
+                    </div>
+                    <div className="field">
+                        <label>Password</label>
+                        <input type="password" placeholder="password" ref={this.password} />
+                    </div>
+                        <input className="ui secondary button" type="submit" value="log in" />
+                        <button className="ui button" type="button" onClick={this.logout}>log out</button>
+                </form>
+=======
             <div className="App">
                 <form onSubmit={this.login}>
                     <input type="text" placeholder="username" ref={this.username} />
@@ -101,8 +117,8 @@ export default class Login extends Component {
                 </form>
                 <div><Link to="/signup"> Don't have an account? Sign up!</Link></div>
                 <div>
+>>>>>>> 7b3295ad8b9123ac6a4c5d03fa48a8792e1a09b4
                     user: {this.state.user && this.state.user.username || 'logged out'}
-                </div>
                 {this.state.user && <div>
                     <pre>
                         {'{\n'}
@@ -115,6 +131,7 @@ export default class Login extends Component {
          
                     </pre>
                 </div>}
+            </div>
             </div>
         );
     }
