@@ -4,6 +4,22 @@ import Message from './Message'
 
 
 class Channel extends Component {
+    state = {
+        orderedMessages: []
+    }
+    componentDidMount() {
+            let messages = this.orderedMessages(this.props.messages)
+            this.setState({
+                orderedMessages: messages
+            })
+    }
+
+     orderedMessages = messages => {
+        const sortedMessages = messages.sort(
+            (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        );
+        return sortedMessages
+    };
 
     render() {
         return (
@@ -14,6 +30,7 @@ class Channel extends Component {
                     })
                 :
                 null
+
                 }
             </div>
         )
@@ -24,4 +41,5 @@ class Channel extends Component {
 }
 
 export default Channel;
+
 

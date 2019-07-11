@@ -15,7 +15,7 @@ export default class ChannelListItem extends Component {
     render() {
 
         return (
-            <a onClick={this.handleClick} className={this.state.channel === this.props.activeChannel? 'active item': 'item'}>{this.state.channel.name} </a>
+            <a onClick={this.handleClick} className={this.state.channel === this.props.conversation? 'active item': 'item'}>{this.state.channel.name} </a>
         )
       
     }
