@@ -16,11 +16,6 @@ import { ActionCable } from 'react-actioncable-provider';
 
 export default class ChannelsContainer extends Component {
 
-    state = {
-        conversations: [],
-        conversation: null,
-        messages: [],
-    }
 
     constructor() {
         super()
@@ -28,14 +23,14 @@ export default class ChannelsContainer extends Component {
         this.password = React.createRef()
 
         if (this.getToken()) {
-            this.getChannels()
             this.getProfile()
         
         }
 
         this.state = {
-                channels: [],
-                activeChannel: null,
+            conversations: [],
+            conversation: null,
+            messages: [],
                 thread: null
         }
     }
@@ -89,7 +84,6 @@ export default class ChannelsContainer extends Component {
         fetch(`${API_ROOT}/api/v1/channels`)
             .then(res => res.json())
             .then(conversations => {
-
                 this.setState({ conversations })
             });
     }
@@ -274,14 +268,14 @@ export default class ChannelsContainer extends Component {
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
-                                    {this.state.activeChannel ? <Channel convertTime={this.convertTime} toggleThread={this.toggleThread} messages={this.state.messages} currentChannel={this.state.activeChannel} /> : null}
+                                    {this.state.conversation ? <Channel convertTime={this.convertTime} toggleThread={this.toggleThread} messages={this.state.conversation.messages} currentChannel={this.state.conversation} /> : null}
 
                                     <div ref={el => { this.el = el; }} />
                                 </div>
                             </div>
                             {
-                                this.state.activeChannel ?
-                                    <MessageField placeholder={"Message " + this.state.activeChannel.name} handleSubmit={this.postMessage} channel={this.state.activeChannel} /> : null
+                                this.state.conversation ?
+                                    <MessageField placeholder={"Message " + this.state.conversation.name} handleSubmit={this.postMessage} channel={this.state.conversation} /> : null
                             }
                         </div>
                     </div>
