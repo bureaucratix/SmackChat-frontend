@@ -4,9 +4,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 export default class Header extends Component {
 
-logout = () => {
-    localStorage.setItem('jwt', '')
-}
+
 
     render() {
         return(
@@ -20,7 +18,7 @@ logout = () => {
                     {this.props.user?
                         <a className="ui item">
                             You're logged in!--
-                            <Link onClick={this.logout} to="/login" >Logout</Link>
+                            <Link onClick={this.props.logout} to="/login" >Logout</Link>
                         </a>
 
                     : 

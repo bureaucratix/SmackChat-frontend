@@ -10,10 +10,51 @@ import {BrowserRouter as Router, Route} from 'react-router-dom'
 class Primary extends React.Component {
 
 
+
+
     //-----Things that were in Login.js, maybe want them here to pass info to Header to display name and logout option-----
     state = {
         username: '',
         isLoggedIn: false
+    }
+
+    login = (ev) => {
+        ev.preventDefault()
+        console.log('log in')
+
+        let username = this.username.current.value
+        let password = this.password.current.value
+
+        fetch(`${API_ROOT}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user: { username, password } })
+        })
+        .then(res => res.json())
+        .then(json => {
+            console.log('login:', json)
+            if (json && json.jwt) {
+                // let base64Url = json.jwt.split('.')[1];
+                // let base64 = base64Url.replace('-', '+').replace('_', '/');
+                // let userInfo =  JSON.parse(atob(base64));
+                // console.log(userInfo)
+                this.saveToken(json.jwt)
+                this.getProfile()
+            } else {
+                alert(json.message)
+            }
+        })            
+    }
+
+
+    logout = () => {
+        localStorage.setItem('jwt', '')
+        this.setState({
+            username: '',
+            isLoggedIn: false
+        })
     }
 
     getToken() {
@@ -42,9 +83,9 @@ class Primary extends React.Component {
             <div className="App">
                 <main>
                     {/* Header not updating dynamically, possibly due to user being passed as props */}
-                    <Header user={this.getToken()?this.getToken():null}/>
+                    <Header logout={this.logout} user={this.getToken()?this.getToken():null}/>
                     <Route exact path='/' component={this.getToken()?ChannelsContainer:Login} />
-                    <Route exact path='/login' component={Login} />
+                    <Route exact path='/login' render={() => <Login login={this.login} logout={this.logout}/>} />
                     <Route exact path='/signup' component={SignUp} />
                     
                     
