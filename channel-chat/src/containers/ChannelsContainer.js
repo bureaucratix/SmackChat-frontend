@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import ChannelListItem from '../components/ChannelListItem'
 
 import UserPopUp from '../components/UserPopUp'
-import Message from '../components/Message'
+import ChannelUsersModal from '../components/ChannelUsersModal'
 import Channel from '../components/Channel'
 import NewChannelModal from '../components/NewChannelModal'
 import AddChannelModal from '../components/AddChannelModal'
@@ -88,43 +88,6 @@ export default class ChannelsContainer extends Component {
     }
 
 
-
-        getUserChannelIds = (user) => {
-            let token = this.getToken()
-            fetch(`${API_ROOT}/user_channels`, {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            })
-                .then(res => res.json())
-                .then(json => {
-                let filtered =  json.filter(userChannel => userChannel.user_id === user.id)
-                    return filtered        
-                })
-        }
-
-        renderChannels = (associations) => {
-            let token = this.getToken()
-            fetch(`${API_ROOT}/channels`, {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            })
-                .then(res => res.json())
-                .then(json => {
-                    let channels = []
-                    associations.map(ass => {
-                        channels = json.filter(channel => channel.id === ass.channel_id)
-                    })
-                    this.setState({
-                         channels: channels
-                    })
-                })
-        }
-
-    
-
-
     getToken() {
         return localStorage.getItem('jwt')
     } 
@@ -181,7 +144,8 @@ export default class ChannelsContainer extends Component {
     }
 
     handleChannelCreate = (channel) => {
-        let name = channel.channelName
+        this.handleAddingUsersToChannels(channel)
+        let name = '#' + channel.channelName
         let token = this.getToken()
         fetch(`${API_ROOT}/channels`, {
             method: 'POST',
@@ -192,19 +156,36 @@ export default class ChannelsContainer extends Component {
             body: JSON.stringify({
               name: name
             }),
-        })
-            .then(res => res.json())
+        }).then(res => res.json())
             .then(json => {
-                console.log(json)
-                // this.setState(prevState => {
-                //     return { conversations: prevState.conversations.concat(json.conversation) }
-                // })
+                this.setState(prevState => {
+                    return { conversations: prevState.conversations.concat(json.channel) }
+                })
+                this.handleAddingUsersToChannels(channel, json.channel.id)
             }
             )
+    }
 
+    channelPost = () => {
+        
+    }
 
-
-
+    handleAddingUsersToChannels = (channel, id) => {
+        let token = this.getToken()
+        let allUsers = channel.channelUsers.concat(this.state.user)
+        allUsers.map(user => {
+            fetch(`${API_ROOT}/user_channels`, {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    channel_id: id
+                }),
+            })
+        })
     }
 
 
@@ -220,9 +201,12 @@ export default class ChannelsContainer extends Component {
 
     handleReceivedConversation = response => {
         const { conversation } = response;
-        this.setState({
-            conversations: [...this.state.conversations, conversation]
-        });
+        if(conversation !== undefined) {
+            this.setState({
+                conversations: [...this.state.conversations, conversation.channel]
+            });
+        }
+       
     };
 
     handleReceivedMessage = response => {
@@ -232,6 +216,9 @@ export default class ChannelsContainer extends Component {
             conversation => conversation.id === message.channel_id
         );
         conversation.messages = [...conversation.messages, message];
+        let userConversations = conversations.filter(convo => convo.users.includes(this.state.user))
+        console.log("user conversations: ", userConversations)
+        
         this.setState({ conversations });
     };
 
@@ -268,16 +255,17 @@ export default class ChannelsContainer extends Component {
                             {
 
                             this.state.conversations.map(chan => {
-                               return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan}  />
-
+                              return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan}  />
                             })}
                         </div>
                     </div>
                     <div className={`${width} wide right floated column`} >
                         <div className="ui segment">
-
+                            {this.state.conversation ? <div className="header"><h3>{this.state.conversation.name}</h3><ChannelUsersModal channelUsers={this.state.conversation.users}/></div> : null}
                             <div className="scroll-feed">
+       
                                 <div className="channel-window">
+          
                                     {this.state.conversation ? <Channel convertTime={this.convertTime} toggleThread={this.toggleThread} messages={this.state.conversation.messages} currentChannel={this.state.conversation} /> : null}
 
                                     <div ref={el => { this.el = el; }} />
