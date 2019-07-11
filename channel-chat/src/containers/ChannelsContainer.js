@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import $ from 'jquery';
 import ChannelListItem from '../components/ChannelListItem'
 
 import UserPopUp from '../components/UserPopUp'
