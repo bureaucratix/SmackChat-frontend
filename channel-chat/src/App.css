@@ -35,8 +35,18 @@
 }
 
 .scroll-feed {
- height: 75vh;
+height: 60vh;
 overflow-y: scroll;
+
+}
+
+.channel-nav {
+  height: 80vh;
+overflow-y: scroll;
+}
+
+.channel-container {
+ min-height: 75vh;
 
 }
 

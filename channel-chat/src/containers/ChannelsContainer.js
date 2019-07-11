@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import ChannelListItem from '../components/ChannelListItem'
-
+import Notifier from 'react-desktop-notification'
 import UserPopUp from '../components/UserPopUp'
 import ChannelUsersModal from '../components/ChannelUsersModal'
 import Channel from '../components/Channel'
@@ -168,7 +168,8 @@ export default class ChannelsContainer extends Component {
         }).then(res => res.json())
             .then(json => {
                 this.setState(prevState => {
-                    return { conversations: prevState.conversations.concat(json.channel) }
+                    return { conversations: prevState.conversations.concat(json.channel),
+                    userConversations: prevState.userConversations.concat(json.channel)}
                 })
                 this.handleAddingUsersToChannels(channel, json.channel.id)
             }
@@ -224,12 +225,27 @@ export default class ChannelsContainer extends Component {
         const conversation = conversations.find(
             conversation => conversation.id === message.channel_id
         );
-        conversation.messages = [...conversation.messages, message];
-        let userConversations = conversations.filter(convo => convo.users.includes(this.state.user))
-        console.log("user conversations: ", userConversations)
         
+        conversation.messages = [...conversation.messages, message]; 
         this.setState({ conversations });
+                Notifier.start(conversation.name, message.content, 'SmackChat', 'https://static.thenounproject.com/png/30135-200.png') 
     };
+
+    addUserChannels = (channel) => {
+        let token = this.getToken()
+        let user = this.state.user
+       
+        fetch(`${API_ROOT}/user_channels`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ channel_id: channel.id, user_id: user.id })
+        }).then(this.setState(prevState => {
+            return {userConversations: prevState.userConversations.concat(channel)}
+        }))
+    }
 
 
     render(){
@@ -239,14 +255,14 @@ export default class ChannelsContainer extends Component {
 
 
                 <div className="ui grid">
-                    <div className="four wide column">
+                    <div className="four wide column channel-nav">
                         <div className="ui vertical fluid tabular menu">
                             <UserPopUp />
                             <h1>#Channels</h1>
                                 <br></br>
 
                             <NewChannelModal handleSubmit={this.handleChannelCreate} />
-                            <AddChannelModal />
+                            <AddChannelModal handleUserChannelAdd={this.addUserChannels}/>
                             <br></br>
                             <br></br>
                             <ActionCable
@@ -272,7 +288,7 @@ export default class ChannelsContainer extends Component {
                         </div>
                     </div>
                     <div className={`${width} wide right floated column`} >
-                        <div className="ui segment">
+                        <div className="ui segment channel-container">
                             {this.state.conversation ? <div className="header"><h3>{this.state.conversation.name}</h3><ChannelUsersModal channelUsers={this.state.conversation.users}/></div> : null}
                             <div className="scroll-feed">
        
