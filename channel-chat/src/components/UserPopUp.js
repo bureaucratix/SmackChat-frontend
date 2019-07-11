@@ -13,6 +13,8 @@ class UserPopUp extends Component {
     this.fetchUser()
   }
 
+  
+
   getToken = () => {
     return localStorage.getItem('jwt')
   }
@@ -82,7 +84,7 @@ class UserPopUp extends Component {
             <Modal.Description>
               <Header>Dashboard</Header>
               {this.state.user.img_url ? <div className= "ui card"><p>This is Your Current Profile Image</p>
-                <img className="ui small image"src={this.state.user.img_url}></img></div>:null}
+                <img className="ui small image" src={this.state.user.img_url}></img></div>:null}
              
 
               <br></br>

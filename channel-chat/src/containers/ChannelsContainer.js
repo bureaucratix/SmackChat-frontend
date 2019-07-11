@@ -252,11 +252,13 @@ export default class ChannelsContainer extends Component {
                             ) : null}
 
                             
+
                             {
 
                             this.state.conversations.map(chan => {
                               return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan}  />
                             })}
+
                         </div>
                     </div>
                     <div className={`${width} wide right floated column`} >
