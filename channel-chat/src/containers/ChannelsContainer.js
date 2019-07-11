@@ -265,12 +265,13 @@ export default class ChannelsContainer extends Component {
                             ) : null}
 
                             
-                            {
+                            
+                            <div className="scroll-feed">
+                                {this.state.conversations.map(chan => {
+                                return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan}  />
 
-                            this.state.conversations.map(chan => {
-                               return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan}  />
-
-                            })}
+                                })}
+                            </div>
                         </div>
                     </div>
                     <div className={`${width} wide right floated column`} >
