@@ -1,7 +1,6 @@
 import React from 'react';
 import Login from '../containers/Login';
 import SignUp from '../components/SignUp';
-import NewChannelModal from '../components/NewChannelModal';
 import ChannelsContainer from './ChannelsContainer'
 
 class Primary extends React.Component {
@@ -15,8 +14,8 @@ class Primary extends React.Component {
                     <div className="header">
                         <h1>SmackChat</h1>
                     </div>
-                    {/* <SignUp/> */}
-                    {/* <Login /> */}
+                    <SignUp/>
+                    <Login />
                     <ChannelsContainer createChannel={this.addChannel} />
                     
                 </main>

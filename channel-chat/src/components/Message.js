@@ -4,7 +4,7 @@ import Reply from './Reply.js'
 class Message extends Component  {
 
 openThread = () => {
-    console.log(this.props.channelId)
+    this.props.toggleThread(this.props.message)
 }
 
 
@@ -16,7 +16,7 @@ showReplies = () => {
 
  content = this.props.message.content
  user_name = this.props.message.user_name
- created_at = this.props.message.created_at
+ created_at = this.props.convertTime(this.props.message.created_at)
     
 render() {
     return (
@@ -26,7 +26,7 @@ render() {
             </div>
             <div className="content">
                 <div className="summary">
-                    <a>{this.user_name}</a>
+                    <a>{this.user_name} </a> 
                     <div className="date">
                         {this.created_at}
                     </div>
@@ -40,7 +40,7 @@ render() {
                         <i className="like icon"></i> 
                     </a>
                     <a onClick={this.openThread} className="comments-link">
-                        {this.props.message.replies ? 
+                        {this.props.message.replies.length !== 0 ? 
                             this.props.message.replies.length === 1 ? `1 reply` : `${this.props.message.replies.length} replies`
                          : 
                             'reply to this'}

@@ -30,6 +30,10 @@
   }
 }
 
+.inline{
+  display: inline-block;
+}
+
 .scroll-feed {
  height: 80vh;
 overflow-y: scroll;

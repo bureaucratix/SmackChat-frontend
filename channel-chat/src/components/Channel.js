@@ -9,9 +9,11 @@ class Channel extends Component {
         return (
             
             <div className="ui feed feed-window">
-                {this.props.messages !== undefined ? this.props.messages.map(m => {
-                    return <Message channelId={this.props.currentChannel.id} key={m.id} message={m} />
-                }):null
+                {this.props.messages ? this.props.messages.map(m => {
+                    return <Message convertTime={this.props.convertTime} toggleThread={this.props.toggleThread} channelId={this.props.currentChannel.id} key={m.id} message={m} />
+                    })
+                :
+                null
                 }
             </div>
         )
