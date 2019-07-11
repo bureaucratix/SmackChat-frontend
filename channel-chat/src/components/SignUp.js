@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { API_ROOT } from '../constants/index';
 
 export default class SignUp extends Component {
 
@@ -20,7 +20,7 @@ export default class SignUp extends Component {
         let name = event.target[1].value
         let email = event.target[2].value
         let password = event.target[3].value
-        fetch('http://localhost:3000/api/v1/users', {
+        fetch(`${API_ROOT}/users`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'
         },

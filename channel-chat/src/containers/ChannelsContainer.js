@@ -80,7 +80,7 @@ export default class ChannelsContainer extends Component {
     }
 
     getChannelsAndMessages = () => {
-        fetch(`${API_ROOT}/api/v1/channels`)
+        fetch(`${API_ROOT}/channels`)
             .then(res => res.json())
             .then(conversations => {
                 this.setState({ conversations })
@@ -90,9 +90,8 @@ export default class ChannelsContainer extends Component {
 
 
         getUserChannelIds = (user) => {
-         console.log(user)
             let token = this.getToken()
-            fetch('http://localhost:3000/api/v1/user_channels', {
+            fetch(`${API_ROOT}/user_channels`, {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
@@ -102,12 +101,11 @@ export default class ChannelsContainer extends Component {
                 let filtered =  json.filter(userChannel => userChannel.user_id === user.id)
                     return filtered        
                 })
-                .catch(err => console.log(err))
         }
 
         renderChannels = (associations) => {
             let token = this.getToken()
-            fetch('http://localhost:3000/api/v1/channels', {
+            fetch(`${API_ROOT}/channels`, {
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
@@ -118,8 +116,6 @@ export default class ChannelsContainer extends Component {
                     associations.map(ass => {
                         channels = json.filter(channel => channel.id === ass.channel_id)
                     })
-                 
-                    console.log('userChannels:', channels)
                     this.setState({
                          channels: channels
                     })
@@ -135,7 +131,6 @@ export default class ChannelsContainer extends Component {
 
    
     changeChannel = (channel) => {
-        console.log('Active Channel: ', channel)
         this.setState({
             conversation: channel,
         })
@@ -145,11 +140,10 @@ export default class ChannelsContainer extends Component {
 
     
     postMessage = (ev) => {
-        console.log('posinging')
         ev.preventDefault()
        let content =  ev.target[0].value
         let token = this.getToken()
-        fetch('http://localhost:3000/api/v1/messages', {
+        fetch(`${API_ROOT}/messages`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -163,7 +157,6 @@ export default class ChannelsContainer extends Component {
         })
             .then(res => res.json() )
             .then(json => {
-                console.log("message", json.message)
                 this.setState(prevState => {
                 return { messages: prevState.messages.concat(json.message)} 
             })}
@@ -176,21 +169,41 @@ export default class ChannelsContainer extends Component {
 
     getProfile = () => {
         let token = this.getToken()
-        fetch('http://localhost:3000/api/v1/profile', {
+        fetch(`${API_ROOT}/profile`, {
             headers: {
                 'Authorization': 'Bearer ' + token
             }
         })
             .then(res => res.json())
             .then(json => {
-                console.log('profile:', json)
                 this.setState({ user: json.user })
-                //  this.getUserChannels(json.user)
             })
     }
 
     handleChannelCreate = (channel) => {
-         console.log(channel)
+        let name = channel.channelName
+        let token = this.getToken()
+        fetch(`${API_ROOT}/channels`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+              name: name
+            }),
+        })
+            .then(res => res.json())
+            .then(json => {
+                console.log(json)
+                // this.setState(prevState => {
+                //     return { conversations: prevState.conversations.concat(json.conversation) }
+                // })
+            }
+            )
+
+
+
 
     }
 
@@ -198,7 +211,6 @@ export default class ChannelsContainer extends Component {
 
     componentDidUpdate() {
         this.scrollToBottom();
-        console.log(this.state)
     }
 
     scrollToBottom() {
@@ -219,7 +231,6 @@ export default class ChannelsContainer extends Component {
         const conversation = conversations.find(
             conversation => conversation.id === message.channel_id
         );
-            console.log(conversation)
         conversation.messages = [...conversation.messages, message];
         this.setState({ conversations });
     };
