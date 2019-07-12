@@ -42,7 +42,6 @@ export default class SignUp extends Component {
 
 
     login = () => {
-        console.log('log in')
 
         let username = this.username.current.value
         let password = this.password.current.value
