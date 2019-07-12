@@ -33,8 +33,9 @@ export default class ChannelsContainer extends Component {
             conversations: [],
             conversation: null,
             messages: [],
-
             thread: null,
+            threadVisible: false,
+
             query: '',
             searched: false
 
@@ -109,9 +110,12 @@ export default class ChannelsContainer extends Component {
             conversation: channel,
         })
     }
+
     toggleThread = (message) => {
         this.setState({
-            thread: message
+            thread: message,
+            threadVisible: !this.state.threadVisible,
+            searched: false
         })
     }
 
@@ -326,7 +330,8 @@ export default class ChannelsContainer extends Component {
 
 
     render(){
-        let width = this.state.thread || this.state.searched ? 'seven' : 'twelve'
+        let width = this.state.threadVisible || this.state.searched ? 'seven' : 'twelve'
+
         return (
             <div><br></br>
 
@@ -401,7 +406,7 @@ export default class ChannelsContainer extends Component {
                     </div>
 
                     {/* -----Sidebar for Threads------- */}
-                    {this.state.searched? 
+                    { !this.state.threadVisible && this.state.searched?
                     <div className="five wide stretched column">
                         <div className="ui segment">
                             <div className="scroll-feed">
@@ -411,14 +416,15 @@ export default class ChannelsContainer extends Component {
                             </div>
                         </div>
                     </div>:null}
-                    { this.state.thread !== null && !this.state.searched?
+                    { this.state.threadVisible && !this.state.searched?
+
 
                     <div className="five wide stretched column">
                         <div className="ui segment">
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
-                                    <Thread convertTime={this.convertTime} message={this.state.thread} />
+                                    <Thread convertTime={this.convertTime} close={this.toggleThread} message={this.state.thread} />
                                 </div>
                             </div>
                             {
