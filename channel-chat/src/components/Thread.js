@@ -77,6 +77,7 @@ export default class Thread extends Component {
                         <div className="extra images"> </div>
                     </div>
                 </div>
+
                 {/* loop through replies of this.props.message.replies and map to these divs */}
                    
                     <h4 class="ui horizontal divider header">
