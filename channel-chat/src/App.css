@@ -60,7 +60,8 @@ main {
 }
 
 .header {
-   background-color: #f1f1f1;
+  color: white;
+   background-color: #0155f0;
   padding: 20px;
   text-align: left;
   width: 100%;
