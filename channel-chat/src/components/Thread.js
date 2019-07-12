@@ -15,7 +15,6 @@ export default class Thread extends Component {
             created_at:null
         }
 
-       
     }
     
 
@@ -40,8 +39,6 @@ export default class Thread extends Component {
         }
 
     componentDidMount() {
-        console.log(this.props.message)
-        console.log(this.props.message.replies)
 
         this.handleImage()
         if (this.props.message){
@@ -79,19 +76,16 @@ export default class Thread extends Component {
                 </div>
 
                 {/* loop through replies of this.props.message.replies and map to these divs */}
-                   
                     <h4 class="ui horizontal divider header">
                     <i class="mail icon"></i>
                     Replies
                     </h4>
-                    {console.log(this.props.message)}
                     {this.props.message.replies ? this.props.message.replies.map(m => {
                     return <div>
                         <div className="ui right align">
-                            <div className="summary">
-                                {console.log(m)}
-                                <a>{m.user_name}  </a>
-                                <div className="ui date inline">
+                            <div className="summary">                              
+                                <a>{this.props.users[m.user_id]}  </a>
+                                <div className="reply-time ui date inline ">
                                     {this.props.convertTime(m.created_at)}
                                 </div>
                                 <div className="extra text right align">
@@ -106,17 +100,7 @@ export default class Thread extends Component {
                 :
                 null
                 }
-                    <div className="ui right align">
-                        <div className="summary">
-                            <a>Test User  </a>
-                            <div className="ui date inline">
-                                Today at 12:34
-                            </div>
-                            <div className="extra text right align">
-                                Hello 1
-                            </div>
-                        </div>
-                    </div>
+                    
                     
             </div>
         

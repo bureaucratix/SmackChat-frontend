@@ -28,7 +28,6 @@ class UserPopUp extends Component {
     })
     .then(resp => resp.json())
     .then(data => {
-      console.log('prevState', this.state)
       this.setState({
         user: data.user
       }, () => console.log('state', this.state))

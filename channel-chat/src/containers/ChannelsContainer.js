@@ -42,6 +42,16 @@ export default class ChannelsContainer extends Component {
 
         }
     }
+
+    componentDidMount() {
+        this.scrollToBottom();
+        this.getChannelsAndMessages();
+        
+    }
+
+    componentDidUpdate() {
+        this.scrollToBottom();
+    }
     
     
     convertTime = (time) => {
@@ -70,15 +80,21 @@ export default class ChannelsContainer extends Component {
         }else{
           return `${months[date.split("-")[1]]} ${date.split("-")[2]} at ${hour}:${minute}`
         }
-      }
+    }
 
   
-
-
-
-    componentDidMount() {
-        this.scrollToBottom();
-        this.getChannelsAndMessages();
+    setUserDictionary = () => {
+        let userDict = {}
+        fetch(`${API_ROOT}/users`)
+            .then(res => res.json())
+            .then(json => {
+                json.map(user=>{
+                userDict[user.id] = user.username
+                return userDict
+            })
+            });
+        console.log(userDict)
+        return userDict
     }
 
     getChannelsAndMessages = () => {
@@ -94,6 +110,10 @@ export default class ChannelsContainer extends Component {
                         } 
                     })
                 })
+<<<<<<< HEAD
+=======
+                // console.log('User Convos: ', userConvos)
+>>>>>>> 03e803b36c12eb0b045e0765654aac21443d9e40
                 this.setState({ conversations: conversations, 
                 userConversations: userConvos})
             });
@@ -143,11 +163,7 @@ export default class ChannelsContainer extends Component {
 
     postReply = (ev) => {
         ev.preventDefault()
-        console.log(this.state.user.id)
-        console.log(this.state.thread)
-        
         let content =  ev.target[0].value
-        console.log(content)
         let token = this.getToken()
         fetch(`${API_ROOT}/replies`, {
             method: 'POST',
@@ -232,10 +248,6 @@ export default class ChannelsContainer extends Component {
 
 
 
-    componentDidUpdate() {
-        this.scrollToBottom();
-    }
-
     scrollToBottom() {
         this.el.scrollIntoView({ behavior: 'smooth' });
     }
@@ -265,7 +277,7 @@ export default class ChannelsContainer extends Component {
 
 
     handleMessageSearch = (event) => {
-        this.setState({query: event.target.value, searched: true})
+        this.setState({query: event.target.value, searched: true, threadVisible:false})
         let searchResults = []
         this.state.conversations.forEach((conversation) => {
            conversation.messages.forEach((message) => {
@@ -449,7 +461,8 @@ export default class ChannelsContainer extends Component {
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
-                                    <Thread convertTime={this.convertTime} close={this.toggleThread} message={this.state.thread} />
+                                    <Thread users={this.setUserDictionary()} convertTime={this.convertTime} message={this.state.thread} />
+
                                 </div>
                             </div>
                             {
