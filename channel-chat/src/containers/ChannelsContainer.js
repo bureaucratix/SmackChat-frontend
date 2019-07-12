@@ -231,6 +231,18 @@ export default class ChannelsContainer extends Component {
                 Notifier.start(conversation.name, message.content, 'SmackChat', 'https://static.thenounproject.com/png/30135-200.png') 
     };
 
+    // handleReceivedReply = response => {
+    //     const { reply } = response;
+    //     const messages = [...this.state.messages];
+    //     const message = messages.find(
+    //         message => message.id === reply.message_id
+    //     );
+
+    //     message.replies = [...message.replies, reply];
+    //     this.setState({ messages });
+    //     Notifier.start(message.name, reply.content, 'SmackChat', 'https://static.thenounproject.com/png/30135-200.png')
+    // };
+
     addUserChannels = (channel) => {
         let token = this.getToken()
         let user = this.state.user
