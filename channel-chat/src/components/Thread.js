@@ -40,6 +40,7 @@ export default class Thread extends Component {
         }
 
     componentDidMount() {
+        console.log(this.props.message)
         console.log(this.props.message.replies)
 
         this.handleImage()
@@ -82,16 +83,13 @@ export default class Thread extends Component {
                     <i class="mail icon"></i>
                     Replies
                     </h4>
+                    {console.log(this.props.message)}
                     {this.props.message.replies ? this.props.message.replies.map(m => {
                     return <div>
                         <div className="ui right align">
                             <div className="summary">
-                                {console.log(m.user_name)}
-                                {console.log(m.user)}
-                                {console.log(m.user_id.name)}
-
-
-                                <a>{m.user}  </a>
+                                {console.log(m)}
+                                <a>{m.user_name}  </a>
                                 <div className="ui date inline">
                                     {this.props.convertTime(m.created_at)}
                                 </div>

@@ -157,14 +157,14 @@ export default class ChannelsContainer extends Component {
                 message_id: this.state.thread.id
             }),
         })
-            .then(res => res.json() )
-            .then(json => {
-                console.log(json)
-                // this.setState(prevState => {
-                // return { messages: prevState.messages.concat(json.message)} 
+            // .then(res => res.json() )
+            // .then(json => {
+            //     console.log(json)
+            //     // this.setState(prevState => {
+            //     // return { messages: prevState.messages.concat(json.message)} 
+            // // })
             // })
-            })
-            
+
         ev.target.reset()
          
     }  
