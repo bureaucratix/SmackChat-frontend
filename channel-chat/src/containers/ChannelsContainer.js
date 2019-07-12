@@ -273,7 +273,7 @@ export default class ChannelsContainer extends Component {
 
 
     handleMessageSearch = (event) => {
-        this.setState({query: event.target.value, searched: true})
+        this.setState({query: event.target.value, searched: true, threadVisible:false})
         let searchResults = []
         this.state.conversations.forEach((conversation) => {
            conversation.messages.forEach((message) => {
