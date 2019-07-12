@@ -45,7 +45,7 @@ class ModalModalExample extends React.Component {
                             options={userOptions}
                         />
                         <br></br>
-                        <Button onClick={this.props.deleteChannel}className="ui red basic button">Delete Channel</Button>
+                        <Button onClick={this.props.deleteChannel}className="ui red basic button">Leave Channel</Button>
                     </Modal.Description>
                 </Modal.Content>
             </Modal>

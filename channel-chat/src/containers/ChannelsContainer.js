@@ -346,8 +346,8 @@ export default class ChannelsContainer extends Component {
             association = userChans.filter(uc => {
                 return uc.channel_id === this.state.conversation.id
             })
-         setTimeout(() => {
-               fetch(`${API_ROOT}/user_channels/${association.od}`, {
+
+               fetch(`${API_ROOT}/user_channels/${association[0].id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': 'Bearer ' + token
@@ -356,7 +356,7 @@ export default class ChannelsContainer extends Component {
             conversation: null
         }))
 
-         }, 500)
+
       
         }, 500)
      
