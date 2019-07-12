@@ -29,7 +29,7 @@ class ModalModalExample extends React.Component {
 
     render() {
         return (
-            <Modal trigger={<button onClick={this.handleOpen} className="ui basic button">  <i className="icon hashtag"></i>Users</button>}
+            <Modal trigger={<button onClick={this.handleOpen} className="ui basic button">  <i className="icon settings"></i>Settings</button>}
                 open={this.state.modalOpen}
                 onClose={this.handleClose}
             >
@@ -45,7 +45,7 @@ class ModalModalExample extends React.Component {
                             options={userOptions}
                         />
                         <br></br>
-                        <Button>Random</Button>
+                        <Button onClick={this.props.deleteChannel}className="ui red basic button">Delete Channel</Button>
                     </Modal.Description>
                 </Modal.Content>
             </Modal>

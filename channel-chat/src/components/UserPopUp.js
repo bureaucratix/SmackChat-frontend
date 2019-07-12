@@ -75,7 +75,7 @@ class UserPopUp extends Component {
     return (
       <div>
         
-        <Button onClick={this.show('fullscreen')}>Profile</Button>
+        <Button onClick={this.show('fullscreen')}><i className = "settings icon"></i> Profile</Button>
 
         <Modal size={size} open={open} onClose={this.close}>
           <Modal.Header>My Profile</Modal.Header>

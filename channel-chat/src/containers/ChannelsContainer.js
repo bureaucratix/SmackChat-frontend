@@ -37,7 +37,8 @@ export default class ChannelsContainer extends Component {
             threadVisible: false,
 
             query: '',
-            searched: false
+            searched: false,
+            deleteOptions: []
 
         }
     }
@@ -93,7 +94,6 @@ export default class ChannelsContainer extends Component {
                         } 
                     })
                 })
-                console.log('User Convos: ', userConvos)
                 this.setState({ conversations: conversations, 
                 userConversations: userConvos})
             });
@@ -133,15 +133,10 @@ export default class ChannelsContainer extends Component {
             body: JSON.stringify({
                 content: content,
                 user_id: this.state.user.id,
-                channel_id: this.state.conversation.id
+                channel_id: this.state.conversation.id, 
+                likes: 0
             }),
         })
-            .then(res => res.json() )
-            .then(json => {
-                this.setState(prevState => {
-                return { messages: prevState.messages.concat(json.message)} 
-            })}
-            )
         ev.target.reset()
          
     }   
@@ -205,7 +200,8 @@ export default class ChannelsContainer extends Component {
             body: JSON.stringify({
               name: name
             }),
-        }).then(res => res.json())
+        })
+            .then(res => res.json())
             .then(json => {
                 this.setState(prevState => {
                     return { conversations: prevState.conversations.concat(json.channel),
@@ -214,10 +210,6 @@ export default class ChannelsContainer extends Component {
                 this.handleAddingUsersToChannels(channel, json.channel.id)
             }
             )
-    }
-
-    channelPost = () => {
-        
     }
 
     handleAddingUsersToChannels = (channel, id) => {
@@ -268,7 +260,7 @@ export default class ChannelsContainer extends Component {
         
         conversation.messages = [...conversation.messages, message]; 
         this.setState({ conversations });
-                Notifier.start(conversation.name, message.content, 'SmackChat', 'https://static.thenounproject.com/png/30135-200.png') 
+                Notifier.start(conversation.name, message.content, '/', 'https://static.thenounproject.com/png/30135-200.png') 
     };
 
 
@@ -297,19 +289,6 @@ export default class ChannelsContainer extends Component {
         this.setState({searched: false})
     }
 
-  
-
-    // handleReceivedReply = response => {
-    //     const { reply } = response;
-    //     const messages = [...this.state.messages];
-    //     const message = messages.find(
-    //         message => message.id === reply.message_id
-    //     );
-
-    //     message.replies = [...message.replies, reply];
-    //     this.setState({ messages });
-    //     Notifier.start(message.name, reply.content, 'SmackChat', 'https://static.thenounproject.com/png/30135-200.png')
-    // };
 
     addUserChannels = (channel) => {
         let token = this.getToken()
@@ -327,6 +306,53 @@ export default class ChannelsContainer extends Component {
         }))
     }
 
+    getUserChannels = () => {
+        let token = this.getToken()
+        fetch(`${API_ROOT}/user_channels`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+        })
+        .then(res => res.json())
+        .then(json => {
+            let filtered = json.filter(user_chan => {
+                return user_chan.user_id == this.state.user.id
+            })
+            this.setState({
+                deleteOptions: filtered
+            })
+        })
+    
+    }
+
+    handleChannelDelete = () => {
+        this.getUserChannels()
+        let association
+        let token = this.getToken()
+        setTimeout(() => {
+            let userChans = this.state.deleteOptions
+            console.log('test', userChans)
+            
+           console.log(this.state.conversation.id)
+            association = userChans.filter(uc => {
+                return uc.channel_id === this.state.conversation.id
+            })
+         setTimeout(() => {
+               fetch(`${API_ROOT}/user_channels/${association.od}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+        }).then(this.setState({
+            conversation: null
+        }))
+
+         }, 500)
+      
+        }, 500)
+     
+    }
 
 
     render(){
@@ -355,7 +381,7 @@ export default class ChannelsContainer extends Component {
                         <div className="ui vertical fluid tabular menu">
                             <UserPopUp />
                             
-                            <h1>#Channels</h1>
+                            <h1 className = 'header'>#Channels</h1>
                                 <br></br>
 
                             <NewChannelModal handleSubmit={this.handleChannelCreate} />
@@ -378,7 +404,6 @@ export default class ChannelsContainer extends Component {
                             {
 
                             this.state.userConversations.map(chan => {
-                                console.log("Channel : ", chan.users)
                                     return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan} />   
                             })}
 
@@ -388,7 +413,7 @@ export default class ChannelsContainer extends Component {
 
                         <div className="ui segment channel-container">
 
-                            {this.state.conversation ? <div className="header"><div className="ui secondary menu"><h3>{this.state.conversation.name}</h3><div className ="right menu"><ChannelUsersModal channelUsers={this.state.conversation.users}/></div></div></div> : null}
+                            {this.state.conversation ? <div className="header"><div className="ui secondary menu"><h3>{this.state.conversation.name}</h3><div className ="right menu"><ChannelUsersModal deleteChannel={this.handleChannelDelete}channelUsers={this.state.conversation.users}/></div></div></div> : null}
                             <div className="scroll-feed">
        
                                 <div className="channel-window">
