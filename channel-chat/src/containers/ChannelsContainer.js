@@ -11,7 +11,7 @@ import SearchMessage from '../components/SearchMessage'
 import Thread from '../components/Thread'
 import Cable from '../components/Cables';
 import { API_ROOT } from '../constants/index';
-import { ActionCable } from 'react-actioncable-provider';
+import { ActionCable, ActionCableConsumer } from 'react-actioncable-provider';
 import { Form } from 'semantic-ui-react';
 
 
@@ -396,7 +396,7 @@ export default class ChannelsContainer extends Component {
                             <AddChannelModal handleUserChannelAdd={this.addUserChannels}/>
                             <br></br>
                             <br></br>
-                            <ActionCable
+                            <ActionCableConsumer
                                 channel={{ channel: 'ChannelsChannel' }}
                                 onReceived={this.handleReceivedConversation}
                             />
