@@ -110,10 +110,6 @@ export default class ChannelsContainer extends Component {
                         } 
                     })
                 })
-<<<<<<< HEAD
-=======
-                // console.log('User Convos: ', userConvos)
->>>>>>> 03e803b36c12eb0b045e0765654aac21443d9e40
                 this.setState({ conversations: conversations, 
                 userConversations: userConvos})
             });
