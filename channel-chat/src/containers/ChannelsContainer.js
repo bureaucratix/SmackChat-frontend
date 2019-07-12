@@ -333,7 +333,7 @@ export default class ChannelsContainer extends Component {
         let width = this.state.threadVisible || this.state.searched ? 'seven' : 'twelve'
 
         return (
-            <div><br></br>
+            <div>
 
                 <div className= "ui secondary menu">
                     <div className="right menu">
@@ -388,7 +388,7 @@ export default class ChannelsContainer extends Component {
 
                         <div className="ui segment channel-container">
 
-                            {this.state.conversation ? <div className="header"><h3>{this.state.conversation.name}</h3><ChannelUsersModal channelUsers={this.state.conversation.users}/></div> : null}
+                            {this.state.conversation ? <div className="header"><div className="ui secondary menu"><h3>{this.state.conversation.name}</h3><div className ="right menu"><ChannelUsersModal channelUsers={this.state.conversation.users}/></div></div></div> : null}
                             <div className="scroll-feed">
        
                                 <div className="channel-window">
