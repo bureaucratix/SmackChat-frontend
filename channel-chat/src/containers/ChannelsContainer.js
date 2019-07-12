@@ -35,6 +35,16 @@ export default class ChannelsContainer extends Component {
             thread: null
         }
     }
+
+    componentDidMount() {
+        this.scrollToBottom();
+        this.getChannelsAndMessages();
+        
+    }
+
+    componentDidUpdate() {
+        this.scrollToBottom();
+    }
     
     
     convertTime = (time) => {
@@ -63,15 +73,21 @@ export default class ChannelsContainer extends Component {
         }else{
           return `${months[date.split("-")[1]]} ${date.split("-")[2]} at ${hour}:${minute}`
         }
-      }
+    }
 
   
-
-
-
-    componentDidMount() {
-        this.scrollToBottom();
-        this.getChannelsAndMessages();
+    setUserDictionary = () => {
+        let userDict = {}
+        fetch(`${API_ROOT}/users`)
+            .then(res => res.json())
+            .then(json => {
+                json.map(user=>{
+                userDict[user.id] = user.username
+                return userDict
+            })
+            });
+        console.log(userDict)
+        return userDict
     }
 
     getChannelsAndMessages = () => {
@@ -231,10 +247,6 @@ export default class ChannelsContainer extends Component {
 
 
 
-    componentDidUpdate() {
-        this.scrollToBottom();
-    }
-
     scrollToBottom() {
         this.el.scrollIntoView({ behavior: 'smooth' });
     }
@@ -343,7 +355,7 @@ export default class ChannelsContainer extends Component {
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
-                                    <Thread convertTime={this.convertTime} message={this.state.thread} />
+                                    <Thread users={this.setUserDictionary()} convertTime={this.convertTime} message={this.state.thread} />
                                 </div>
                             </div>
                             {

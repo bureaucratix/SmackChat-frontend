@@ -34,6 +34,10 @@
   display: inline-block;
 }
 
+.reply-time {
+  font-size: 10px;
+}
+
 .scroll-feed {
 height: 60vh;
 overflow-y: scroll;
