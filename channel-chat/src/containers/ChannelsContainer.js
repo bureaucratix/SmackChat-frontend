@@ -93,7 +93,7 @@ export default class ChannelsContainer extends Component {
                         } 
                     })
                 })
-                console.log('User Convos: ', userConvos)
+                // console.log('User Convos: ', userConvos)
                 this.setState({ conversations: conversations, 
                 userConversations: userConvos})
             });
@@ -148,11 +148,7 @@ export default class ChannelsContainer extends Component {
 
     postReply = (ev) => {
         ev.preventDefault()
-        console.log(this.state.user.id)
-        console.log(this.state.thread)
-        
         let content =  ev.target[0].value
-        console.log(content)
         let token = this.getToken()
         fetch(`${API_ROOT}/replies`, {
             method: 'POST',
