@@ -1,0 +1,6 @@
+[build]
+base = "
+channel-chat/"
+publish = "
+channel-chat/build/"
+command = "yarn build"
