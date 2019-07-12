@@ -39,7 +39,7 @@
 }
 
 .scroll-feed {
-height: 60vh;
+height: 55vh;
 overflow-y: scroll;
 
 }
@@ -64,6 +64,7 @@ main {
   padding: 20px;
   text-align: left;
   width: 100%;
+  margin-bottom: 1%;
 }
 
 

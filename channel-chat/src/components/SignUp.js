@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { API_ROOT } from '../constants/index';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
 
 export default class SignUp extends Component {
 
+    state = {
+        username: '',
+        isLoggedIn: false
+    }
 
-    // constructor() {
-    //     super()
-    //     this.state = {
-    //         username: '',
-    //         name: '', 
-    //         password: '', 
-    //         email: ''
-    //     }
-    // }
+    constructor() {
+        super()
+        this.username = React.createRef()
+        this.password = React.createRef()
+    }
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -34,11 +34,75 @@ export default class SignUp extends Component {
             })
 
         }
-        )
+        ).then(
+            setTimeout(() => {
+                this.login()
+            }, 1000))
+    }
+
+
+    login = () => {
+        console.log('log in')
+
+        let username = this.username.current.value
+        let password = this.password.current.value
+
+        fetch(`${API_ROOT}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user: { username, password } })
+        })
+            .then(res => res.json())
+            .then(json => {
+                console.log('login:', json)
+                if (json && json.jwt) {
+                    // let base64Url = json.jwt.split('.')[1];
+                    // let base64 = base64Url.replace('-', '+').replace('_', '/');
+                    // let userInfo =  JSON.parse(atob(base64));
+                    // console.log(userInfo)
+                    this.saveToken(json.jwt)
+                    this.getProfile()
+                    this.forceUpdate();
+                } else {
+                    alert(json.message)
+                }
+            })
+    }
+
+    getProfile = () => {
+        let token = this.getToken()
+        fetch(`${API_ROOT}/profile`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+            .then(json => {
+                console.log('profile:', json)
+                this.setState({ user: json.user, isLoggedIn: true })
+            })
+    }
+
+
+
+    saveToken(jwt) {
+        localStorage.setItem('jwt', jwt)
+
+    }
+
+
+
+    getToken(jwt) {
+        return localStorage.getItem('jwt')
     }
 
 
     render() {
+        if (this.state.isLoggedIn === true) {
+            return <Redirect to="/" />
+        }
         return (
             <div className="App ui two column centered grid">
                 <form onSubmit={this.handleSubmit}>
@@ -46,7 +110,7 @@ export default class SignUp extends Component {
                         <div className="fields">
                             <div className="field">
                                 <label>Username</label>
-                                <input type="text" placeholder="username" id="username"/>
+                                <input type="text" placeholder="username" id="username" ref={this.username}/>
                             </div>
                             <div className="field">
                                 <label>Name</label>
@@ -62,7 +126,7 @@ export default class SignUp extends Component {
                             </div>
                             <div className="field">
                                 <label>Password</label>
-                                <input type="password" placeholder="password" id="password"/>
+                                <input type="password" placeholder="password" id="password" ref={this.password}/>
                             </div>
                         </div>
                     </div>

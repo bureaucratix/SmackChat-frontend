@@ -7,6 +7,7 @@ import Channel from '../components/Channel'
 import NewChannelModal from '../components/NewChannelModal'
 import AddChannelModal from '../components/AddChannelModal'
 import MessageField from '../components/MessageField'
+import SearchMessage from '../components/SearchMessage'
 import Thread from '../components/Thread'
 import Cable from '../components/Cables';
 import { API_ROOT } from '../constants/index';
@@ -32,7 +33,12 @@ export default class ChannelsContainer extends Component {
             conversations: [],
             conversation: null,
             messages: [],
-            thread: null
+            thread: null,
+            threadVisible: false,
+
+            query: '',
+            searched: false
+
         }
     }
 
@@ -120,9 +126,12 @@ export default class ChannelsContainer extends Component {
             conversation: channel,
         })
     }
+
     toggleThread = (message) => {
         this.setState({
-            thread: message
+            thread: message,
+            threadVisible: !this.state.threadVisible,
+            searched: false
         })
     }
 
@@ -274,6 +283,46 @@ export default class ChannelsContainer extends Component {
                 Notifier.start(conversation.name, message.content, 'SmackChat', 'https://static.thenounproject.com/png/30135-200.png') 
     };
 
+
+    handleMessageSearch = (event) => {
+        this.setState({query: event.target.value, searched: true, threadVisible:false})
+        let searchResults = []
+        this.state.conversations.forEach((conversation) => {
+           conversation.messages.forEach((message) => {
+                if (message.content.toLowerCase().includes(this.state.query.toLowerCase())) {
+                    searchResults.push(message)
+                }
+           })
+        })
+        this.setState({
+            filtered: searchResults
+        })
+
+    }
+
+    handleMessageSearchSubmit = (event) => {
+        event.preventDefault()
+        this.setState({query: ''})
+    }
+
+    handleSearchClear = () => {
+        this.setState({searched: false})
+    }
+
+  
+
+    // handleReceivedReply = response => {
+    //     const { reply } = response;
+    //     const messages = [...this.state.messages];
+    //     const message = messages.find(
+    //         message => message.id === reply.message_id
+    //     );
+
+    //     message.replies = [...message.replies, reply];
+    //     this.setState({ messages });
+    //     Notifier.start(message.name, reply.content, 'SmackChat', 'https://static.thenounproject.com/png/30135-200.png')
+    // };
+
     addUserChannels = (channel) => {
         let token = this.getToken()
         let user = this.state.user
@@ -291,16 +340,33 @@ export default class ChannelsContainer extends Component {
     }
 
 
+
     render(){
-        let width = this.state.thread ? 'seven' : 'twelve'
+        let width = this.state.threadVisible || this.state.searched ? 'seven' : 'twelve'
+
         return (
-            <div><br></br>
+            <div>
 
-
+                <div className= "ui secondary menu">
+                    <div className="right menu">
+                        <form onSubmit={this.handleMessageSearchSubmit}>
+                            <div className="item">
+                                <div className="ui icon input">
+                                    <input type="text"  placeholder="Search Messages..." value={this.state.query} onChange={this.handleMessageSearch}/>
+                                    {!this.state.searched && this.state.query===""? <i className="search link icon"></i>:<i onClick={this.handleSearchClear} className="chevron up link icon"/>
+                                    }
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
                 <div className="ui grid">
+
                     <div className="four wide column channel-nav">
+
                         <div className="ui vertical fluid tabular menu">
                             <UserPopUp />
+                            
                             <h1>#Channels</h1>
                                 <br></br>
 
@@ -331,8 +397,10 @@ export default class ChannelsContainer extends Component {
                         </div>
                     </div>
                     <div className={`${width} wide right floated column`} >
+
                         <div className="ui segment channel-container">
-                            {this.state.conversation ? <div className="header"><h3>{this.state.conversation.name}</h3><ChannelUsersModal channelUsers={this.state.conversation.users}/></div> : null}
+
+                            {this.state.conversation ? <div className="header"><div className="ui secondary menu"><h3>{this.state.conversation.name}</h3><div className ="right menu"><ChannelUsersModal channelUsers={this.state.conversation.users}/></div></div></div> : null}
                             <div className="scroll-feed">
        
                                 <div className="channel-window">
@@ -348,14 +416,28 @@ export default class ChannelsContainer extends Component {
                             }
                         </div>
                     </div>
-                    {/* -----Sidebar for THreads------- */}
-                    { this.state.thread !== null ?
+
+                    {/* -----Sidebar for Threads------- */}
+                    { !this.state.threadVisible && this.state.searched?
+                    <div className="five wide stretched column">
+                        <div className="ui segment">
+                            <div className="scroll-feed">
+                                <div className="channel-window">
+                                    <SearchMessage messages={this.state.filtered}/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>:null}
+                    { this.state.threadVisible && !this.state.searched?
+
+
                     <div className="five wide stretched column">
                         <div className="ui segment">
 
                             <div className="scroll-feed">
                                 <div className="channel-window">
                                     <Thread users={this.setUserDictionary()} convertTime={this.convertTime} message={this.state.thread} />
+
                                 </div>
                             </div>
                             {
@@ -367,6 +449,7 @@ export default class ChannelsContainer extends Component {
                     </div>
                     :
                     null}
+                    {}
                 </div>
                 
             </div>
