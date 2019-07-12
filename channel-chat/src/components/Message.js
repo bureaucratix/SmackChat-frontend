@@ -63,7 +63,8 @@ render() {
                         {this.created_at}
                     </div>
                     <div className="extra text">
-                        {this.content}
+                        
+                        {this.content.substring(0, 4) === 'http' ? <a href={this.content} target="_blank">{this.content.split("//")[1]}</a>:this.content}
                     </div>
                 </div>
                 <div className="extra images"> </div>

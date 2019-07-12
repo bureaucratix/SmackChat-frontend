@@ -40,7 +40,8 @@ export default class Thread extends Component {
         }
 
     componentDidMount() {
-        console.log(this.props)
+        console.log(this.props.message)
+        console.log(this.props.message.replies)
 
         this.handleImage()
         if (this.props.message){
@@ -61,7 +62,7 @@ export default class Thread extends Component {
                 </button>
                 <div className="event" >
                     <div className="label">
-                        {this.state.user_img_url? <img className="ui medium circular image" src={this.state.user_img_url} alt=''/>: <i className ="user icon"> </i>} 
+                        {this.state.user_img_url? <img className="ui mini image" src={this.state.user_img_url} alt=''/>: <i className ="user icon"> </i>} 
                     </div>
                     <div className="content">
                         <div className="summary">
@@ -74,16 +75,41 @@ export default class Thread extends Component {
                             </div>
                         </div>
                         <div className="extra images"> </div>
-                      
                     </div>
                 </div>
-                {/* loop through replies of this.state.message and map to these divs */}
-                    <>
-                        <div className="ui segment right floated">
 
+                {/* loop through replies of this.props.message.replies and map to these divs */}
+                   
+                    <h4 class="ui horizontal divider header">
+                    <i class="mail icon"></i>
+                    Replies
+                    </h4>
+                    {console.log(this.props.message)}
+                    {this.props.message.replies ? this.props.message.replies.map(m => {
+                    return <div>
+                        <div className="ui right align">
+                            <div className="summary">
+                                {console.log(m)}
+                                <a>{m.user_name}  </a>
+                                <div className="ui date inline">
+                                    {this.props.convertTime(m.created_at)}
+                                </div>
+                                <div className="extra text right align">
+                                    {m.content}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui horizontal divider"/>
+                    </div>
+                        //  <Message convertTime={this.props.convertTime} toggleThread={this.props.toggleThread} channelId={this.props.currentChannel.id} key={m.id} message={m} />
+                    })
+                :
+                null
+                }
+                    <div className="ui right align">
                         <div className="summary">
                             <a>Test User  </a>
-                            <div className="date inline">
+                            <div className="ui date inline">
                                 Today at 12:34
                             </div>
                             <div className="extra text right align">
@@ -91,19 +117,7 @@ export default class Thread extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="ui segment right floated">
-                        <div className="summary">
-                            <a>Test User 2  </a>
-                            <div className="date inline">
-                                Today at 12:34
-                            </div>
-                            <div className="extra text right align">
-                                This is a much longer message meant to stretch the container segment
-                            </div>
-                        </div>
-
-                    </div>
-                    </>
+                    
             </div>
         
         )

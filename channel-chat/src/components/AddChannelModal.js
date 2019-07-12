@@ -15,10 +15,17 @@ class ModalModalExample extends React.Component {
         this.state = {
             channels: [],
             channelOptions: [],
+            channel: null,
 
             modalOpen: false
         }
+
+        if (this.getToken()) {
+            this.getProfile()
+
+        }
     }
+
 
     
     componentDidMount() {
@@ -26,10 +33,24 @@ class ModalModalExample extends React.Component {
       
     }
 
+    getProfile = () => {
+        let token = this.getToken()
+        fetch(`${API_ROOT}/profile`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            .then(res => res.json())
+            .then(json => {
+                this.setState({ user: json.user })
+            })
+    }
+
+
     getChannelOptions(channels) {
         let options = []
         channels.map(chan => {
-           let obj = {value: chan.name, text: chan.name, key: chan.id}
+           let obj = {value: chan, text: chan.name, key: chan.id}
             options.push(obj)
         })
 
@@ -37,6 +58,8 @@ class ModalModalExample extends React.Component {
             channelOptions: options
         })
     }
+
+
     getChannels = () => {
         let token = this.getToken()
         fetch(`${API_ROOT}/channels`, {
@@ -60,17 +83,19 @@ class ModalModalExample extends React.Component {
         return localStorage.getItem('jwt')
     }
 
-    handleChange = (ev, { value }) => {
-        if (Array.isArray(value)) {
-            this.setState({
-                channelUsers: value
-            })
-        } else {
-            this.setState({
-                channelName: value
-            })
-        }
 
+    handleChange = (ev, { value }) => {
+            this.setState({
+                channel: value
+            })
+
+    }
+
+    
+    handleChannelAdd = () => {
+        this.handleClose()
+        let channel = this.state.channel
+        this.props.handleUserChannelAdd(channel)
     }
 
 
@@ -85,7 +110,8 @@ class ModalModalExample extends React.Component {
                 <Modal.Content>
                     <Modal.Description>
                         <Header>Channel Name</Header>
-                        <Dropdown
+                        <Dropdown 
+                            onChange={this.handleChange}
                             placeholder='Select Channel'
                             fluid
                             search
@@ -93,7 +119,7 @@ class ModalModalExample extends React.Component {
                             options={this.state.channelOptions}
                         />
                         <br></br>
-                        <Button>Add Channel</Button>
+                        <Button onClick={this.handleChannelAdd}>Add Channel</Button>
                     </Modal.Description>
                 </Modal.Content>
             </Modal>

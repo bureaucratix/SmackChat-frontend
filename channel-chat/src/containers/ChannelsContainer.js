@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import ChannelListItem from '../components/ChannelListItem'
-
+import Notifier from 'react-desktop-notification'
 import UserPopUp from '../components/UserPopUp'
 import ChannelUsersModal from '../components/ChannelUsersModal'
 import Channel from '../components/Channel'
 import NewChannelModal from '../components/NewChannelModal'
 import AddChannelModal from '../components/AddChannelModal'
 import MessageField from '../components/MessageField'
+import SearchMessage from '../components/SearchMessage'
 import Thread from '../components/Thread'
 import Cable from '../components/Cables';
 import { API_ROOT } from '../constants/index';
@@ -28,11 +29,16 @@ export default class ChannelsContainer extends Component {
         }
 
         this.state = {
+            userConversations: [],
             conversations: [],
             conversation: null,
             messages: [],
             thread: null,
-            threadVisible: false
+            threadVisible: false,
+
+            query: '',
+            searched: false
+
         }
     }
     
@@ -78,7 +84,18 @@ export default class ChannelsContainer extends Component {
         fetch(`${API_ROOT}/channels`)
             .then(res => res.json())
             .then(conversations => {
-                this.setState({ conversations })
+                
+                let userConvos =  []
+                conversations.map(conv => {
+                    conv.users.map(user => {
+                        if(user.id === this.state.user.id) {
+                            userConvos.push(conv)
+                        } 
+                    })
+                })
+                console.log('User Convos: ', userConvos)
+                this.setState({ conversations: conversations, 
+                userConversations: userConvos})
             });
     }
 
@@ -97,7 +114,8 @@ export default class ChannelsContainer extends Component {
     toggleThread = (message) => {
         this.setState({
             thread: message,
-            threadVisible: !this.state.threadVisible
+            threadVisible: !this.state.threadVisible,
+            searched: false
         })
     }
 
@@ -125,9 +143,40 @@ export default class ChannelsContainer extends Component {
             })}
             )
         ev.target.reset()
-
          
     }   
+
+    postReply = (ev) => {
+        ev.preventDefault()
+        console.log(this.state.user.id)
+        console.log(this.state.thread)
+        
+        let content =  ev.target[0].value
+        console.log(content)
+        let token = this.getToken()
+        fetch(`${API_ROOT}/replies`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                content: content,
+                user_id: this.state.user.id,
+                message_id: this.state.thread.id
+            }),
+        })
+            // .then(res => res.json() )
+            // .then(json => {
+            //     console.log(json)
+            //     // this.setState(prevState => {
+            //     // return { messages: prevState.messages.concat(json.message)} 
+            // // })
+            // })
+
+        ev.target.reset()
+         
+    }  
 
 
     getProfile = () => {
@@ -159,7 +208,8 @@ export default class ChannelsContainer extends Component {
         }).then(res => res.json())
             .then(json => {
                 this.setState(prevState => {
-                    return { conversations: prevState.conversations.concat(json.channel) }
+                    return { conversations: prevState.conversations.concat(json.channel),
+                    userConversations: prevState.userConversations.concat(json.channel)}
                 })
                 this.handleAddingUsersToChannels(channel, json.channel.id)
             }
@@ -215,29 +265,101 @@ export default class ChannelsContainer extends Component {
         const conversation = conversations.find(
             conversation => conversation.id === message.channel_id
         );
-        conversation.messages = [...conversation.messages, message];
-        let userConversations = conversations.filter(convo => convo.users.includes(this.state.user))
-        console.log("user conversations: ", userConversations)
         
+        conversation.messages = [...conversation.messages, message]; 
         this.setState({ conversations });
+                Notifier.start(conversation.name, message.content, 'SmackChat', 'https://static.thenounproject.com/png/30135-200.png') 
     };
 
 
+    handleMessageSearch = (event) => {
+        this.setState({query: event.target.value, searched: true})
+        let searchResults = []
+        this.state.conversations.forEach((conversation) => {
+           conversation.messages.forEach((message) => {
+                if (message.content.toLowerCase().includes(this.state.query.toLowerCase())) {
+                    searchResults.push(message)
+                }
+           })
+        })
+        this.setState({
+            filtered: searchResults
+        })
+
+    }
+
+    handleMessageSearchSubmit = (event) => {
+        event.preventDefault()
+        this.setState({query: ''})
+    }
+
+    handleSearchClear = () => {
+        this.setState({searched: false})
+    }
+
+  
+
+    // handleReceivedReply = response => {
+    //     const { reply } = response;
+    //     const messages = [...this.state.messages];
+    //     const message = messages.find(
+    //         message => message.id === reply.message_id
+    //     );
+
+    //     message.replies = [...message.replies, reply];
+    //     this.setState({ messages });
+    //     Notifier.start(message.name, reply.content, 'SmackChat', 'https://static.thenounproject.com/png/30135-200.png')
+    // };
+
+    addUserChannels = (channel) => {
+        let token = this.getToken()
+        let user = this.state.user
+       
+        fetch(`${API_ROOT}/user_channels`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ channel_id: channel.id, user_id: user.id })
+        }).then(this.setState(prevState => {
+            return {userConversations: prevState.userConversations.concat(channel)}
+        }))
+    }
+
+
+
     render(){
-        let width = this.state.threadVisible ? 'seven' : 'twelve'
+        let width = this.state.threadVisible || this.state.searched ? 'seven' : 'twelve'
+
         return (
             <div><br></br>
 
-
+                <div className= "ui secondary menu">
+                    <div className="right menu">
+                        <form onSubmit={this.handleMessageSearchSubmit}>
+                            <div className="item">
+                                <div className="ui icon input">
+                                    <input type="text"  placeholder="Search Messages..." value={this.state.query} onChange={this.handleMessageSearch}/>
+                                    {!this.state.searched && this.state.query===""? <i className="search link icon"></i>:<i onClick={this.handleSearchClear} className="chevron up link icon"/>
+                                    }
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
                 <div className="ui grid">
-                    <div className="four wide column">
+
+                    <div className="four wide column channel-nav">
+
                         <div className="ui vertical fluid tabular menu">
                             <UserPopUp />
+                            
                             <h1>#Channels</h1>
                                 <br></br>
 
                             <NewChannelModal handleSubmit={this.handleChannelCreate} />
-                            <AddChannelModal />
+                            <AddChannelModal handleUserChannelAdd={this.addUserChannels}/>
                             <br></br>
                             <br></br>
                             <ActionCable
@@ -255,14 +377,17 @@ export default class ChannelsContainer extends Component {
 
                             {
 
-                            this.state.conversations.map(chan => {
-                              return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan}  />
+                            this.state.userConversations.map(chan => {
+                                console.log("Channel : ", chan.users)
+                                    return <ChannelListItem key={chan.id} conversation={this.state.conversation} channelSelect={this.changeChannel} channel={chan} />   
                             })}
 
                         </div>
                     </div>
                     <div className={`${width} wide right floated column`} >
-                        <div className="ui segment">
+
+                        <div className="ui segment channel-container">
+
                             {this.state.conversation ? <div className="header"><h3>{this.state.conversation.name}</h3><ChannelUsersModal channelUsers={this.state.conversation.users}/></div> : null}
                             <div className="scroll-feed">
        
@@ -279,8 +404,21 @@ export default class ChannelsContainer extends Component {
                             }
                         </div>
                     </div>
-                    {/* -----Sidebar for THreads------- */}
-                    { this.state.threadVisible === true ?
+
+                    {/* -----Sidebar for Threads------- */}
+                    { !this.state.threadVisible && this.state.searched?
+                    <div className="five wide stretched column">
+                        <div className="ui segment">
+                            <div className="scroll-feed">
+                                <div className="channel-window">
+                                    <SearchMessage messages={this.state.filtered}/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>:null}
+                    { this.state.threadVisible && !this.state.searched?
+
+
                     <div className="five wide stretched column">
                         <div className="ui segment">
 
@@ -291,13 +429,14 @@ export default class ChannelsContainer extends Component {
                             </div>
                             {
                                 this.state.conversation ?
-                                    <MessageField handleSubmit={this.postMessage} channel={this.state.conversation} /> : null
+                                    <MessageField handleSubmit={this.postReply} placeholder={"Reply to this thread"} channel={this.state.conversation} /> : null
                             }
                         </div>
                         
                     </div>
                     :
                     null}
+                    {}
                 </div>
                 
             </div>
