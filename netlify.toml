@@ -2,5 +2,5 @@
 base = "
 channel-chat/"
 publish = "
-channel-chat/build/"
+channel-chat"
 command = "yarn build"
