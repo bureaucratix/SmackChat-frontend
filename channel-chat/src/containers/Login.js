@@ -106,7 +106,9 @@ export default class Login extends Component {
                         <input className="ui secondary button" type="submit" value="log in" />
                         <button className="ui button" type="button" onClick={this.logout}>log out</button>
                 </form>
-                    user: {this.state.user && this.state.user.username || 'logged out'}
+                <div><Link to="/signup"> Don't have an account? Sign up</Link></div>
+
+                    {/* user: {this.state.user && this.state.user.username || 'logged out'}
                 {this.state.user && <div>
                     <pre>
                         {'{\n'}
@@ -118,7 +120,7 @@ export default class Login extends Component {
                     <pre>
          
                     </pre>
-                </div>}
+                </div>} */}
             </div>
             </div>
         );
