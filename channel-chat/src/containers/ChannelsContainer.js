@@ -268,7 +268,10 @@ export default class ChannelsContainer extends Component {
         
         conversation.messages = [...conversation.messages, message]; 
         this.setState({ conversations });
-                Notifier.start(conversation.name, message.content, '/', 'https://static.thenounproject.com/png/30135-200.png') 
+                if(this.state.userConversations.includes(conversation)) {
+                    Notifier.start(conversation.name, message.content, '/', 'https://static.thenounproject.com/png/30135-200.png') 
+                }
+                
     };
 
 
@@ -340,9 +343,6 @@ export default class ChannelsContainer extends Component {
         let token = this.getToken()
         setTimeout(() => {
             let userChans = this.state.deleteOptions
-            console.log('test', userChans)
-            
-           console.log(this.state.conversation.id)
             association = userChans.filter(uc => {
                 return uc.channel_id === this.state.conversation.id
             })

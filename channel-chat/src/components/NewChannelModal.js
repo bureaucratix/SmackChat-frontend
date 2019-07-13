@@ -83,7 +83,8 @@ class ModalModalExample extends React.Component {
 
     render() {
         return (
-    <Modal trigger={<button onClick={this.handleOpen} className="ui basic button">  <i className="icon hashtag"></i>Create Channel</button>}
+    <Modal trigger={<button onClick={this.handleOpen} className="ui basic button">
+          <i className="icon hashtag"></i>Create Channel</button>}
                 open={this.state.modalOpen}
                 onClose={this.handleClose}
                 >
