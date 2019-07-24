@@ -1,4 +1,0 @@
-[build]
-base = "channel-chat/"
-publish = "channel-chat"
-command = "yarn build"
